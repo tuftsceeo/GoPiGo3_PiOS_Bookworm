@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Script works on:
+# - PiOS Bookworm 32-bit Desktop
+# - PiOS Bookworm 64-bit Desktop
+
+
 cd /home/pi
 git clone http://www.github.com/DexterInd/GoPiGo3.git /home/pi/Dexter/GoPiGo3
 sudo curl -kL dexterindustries.com/update_tools | bash -s -- --system-wide --use-python3-exe-too --install-deb-debs --install-python-package

@@ -10,6 +10,10 @@ To build all programs in src/ dir (included in the CMakeList.txt)
 * cmake . 
 * make 
 
+To run the executables:
+* ./executable
+
+
 
 # THIS DOES NOT WORK ATM! 
 
@@ -17,10 +21,10 @@ To compile an individual program at the cpp/src/ level:
  *    cd /home/pi/bookworm_test/cpp/src
  *    g++ -o motors motors.cpp ../GoPiGo3.cpp -I..
  *  run command:
- *    sudo ./motors
+ *    ./motors
 
 
-Programs: 
+Programs:  
 - info:  Read GoPiGo3 info (serial num, firmware version ..) 
 - leds:  cycles intensity of left/right red LEDS.  cycles intensity and color of multi-color LED  
 - encoders: displays encoder values. Slightly rotate a wheel to see encoder value change 

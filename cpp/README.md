@@ -6,11 +6,12 @@ REQ:
   sudo apt install cmake 
 
 To build all programs in src/ dir (included in the CMakeList.txt) 
-
+* cd ~/bookworm_test/cpp
 * cmake . 
 * make 
 
 To run the executables:
+* (cd ~/bookworm_test/cpp)
 * ./executable
 
 

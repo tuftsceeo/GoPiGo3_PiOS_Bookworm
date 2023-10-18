@@ -33,15 +33,17 @@ int main(){
 
   GPG.detect(); // Make sure that the GoPiGo3 is communicating and that the firmware is compatible with the drivers.
 
-  GPG.set_grove_type(GROVE_1, GROVE_TYPE_US);
-  GPG.set_grove_type(GROVE_2, GROVE_TYPE_IR_DI_REMOTE);
+  // GPG.set_grove_type(GROVE_1, GROVE_TYPE_US);
+  GPG.set_grove_type(GROVE_2, GROVE_TYPE_US);
+  // GPG.set_grove_type(GROVE_2, GROVE_TYPE_IR_DI_REMOTE);
   sensor_ultrasonic_t US;
-  sensor_infrared_gobox_t IR;
+  // sensor_infrared_gobox_t IR;
 
   while(true){
     int USerror = GPG.get_grove_value(GROVE_1, &US);
-    int IRerror = GPG.get_grove_value(GROVE_2, &IR);
-    printf("US: Error %d  %4dmm    IR: Error %d  button %d\n", USerror, US.mm, IRerror, IR.button);
+    // int IRerror = GPG.get_grove_value(GROVE_2, &IR);
+    // printf("US: Error %d  %4dmm    IR: Error %d  button %d\n", USerror, US.mm, IRerror, IR.button);
+    printf("US: Error %d  %4dmm \n", USerror, US.mm);
     usleep(20000);
   }
 }

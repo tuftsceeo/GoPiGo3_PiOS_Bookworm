@@ -25,7 +25,7 @@ To compile an individual program at the cpp/src/ level:
  *    ./motors
 
 
-Programs:  
+Programs (code in /src):  
 - info:  Read GoPiGo3 info (serial num, firmware version ..) 
 - leds:  cycles intensity of left/right red LEDS.  cycles intensity and color of multi-color LED  
 - encoders: displays encoder values. Slightly rotate a wheel to see encoder value change 
@@ -36,6 +36,8 @@ Programs:
   -   x  bwd 
   -   SPACEBAR   stop 
   -   a  left - turn - right d 
+- servos: rotates both servos back and forth
 
+Programs Not Working:
 - ultrasonic:  plug into AD2 - ( getting "Error 1" ?? ) 
 - i2c: reads i2c bus  ( getting "Error 4" ?? ) 

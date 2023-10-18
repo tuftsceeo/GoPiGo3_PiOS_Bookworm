@@ -38,6 +38,10 @@ target_link_libraries(ultrasonic gopigo3)
 add_executable(drive src/drive.cpp)
 target_link_libraries(drive gopigo3)
 
+# servos
+add_executable(servos src/servos.cpp)
+target_link_libraries(servos gopigo3)
+
 ### Installation
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/

@@ -37,7 +37,7 @@ Programs (code in /src):
   -   SPACEBAR   stop 
   -   a  left - turn - right d 
 - servos: rotates both servos back and forth
+- ultrasonic:  plug into AD2, shows distance in milimeters with Grove Ultrasonic Ranger (not HC-SR04 !!!) 
 
 Programs Not Working:
-- ultrasonic:  plug into AD2 - ( getting "Error 1" ?? ) 
 - i2c: reads i2c bus  ( getting "Error 4" ?? ) 

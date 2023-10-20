@@ -4,4 +4,4 @@
 echo
 echo *** PRESS CTRL-D TO EXIT DOCKER
 echo
-sudo docker run -it r2hd
+sudo docker run -it --net=host --privileged r2hd

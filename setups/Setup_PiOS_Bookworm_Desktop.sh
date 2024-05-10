@@ -41,7 +41,7 @@ sudo python3 setup.py install
 
 === also depends on smbus-cffi
 
-pip install smbus-cffi --break-system-packages
+sudo pip3 install smbus-cffi --break-system-packages
 
 
 # ==== GPG3_POWER SERVICE ===
@@ -83,6 +83,6 @@ cp /home/pi/Dexter/GoPiGo3/Install/list_of_serial_numbers.pkl /home/pi/Dexter/.l
 
 # === ESPEAK-NG
 sudo apt install -y espeak-ng
-pip3 install py-espeak-ng --break-system-packages
+sudo pip3 install py-espeak-ng --break-system-packages
 espeak-ng "Am I alive? Can you hear me?"
 

@@ -39,7 +39,7 @@ sudo cp ~/bookworm_test/i2c/di_i2c.py.bookworm di_i2c.py
 sudo cp ~/bookworm_test/RFR_Tools/setup.py .
 sudo python3 setup.py install
 
-=== also depends on smbus-cffi
+# === also depends on smbus-cffi
 
 sudo pip3 install smbus-cffi --break-system-packages
 

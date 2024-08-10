@@ -30,10 +30,10 @@ git clone https://github.com/DexterInd/DI_Sensors.git /home/pi/Dexter/DI_Sensors
 
 git clone https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm.git /home/pi/GoPiGo3_PiOS_Bookworm
 
-sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/pigpiod.service /etc/systemd/system
-sudo systemctl enable pigpiod.service
-sudo systemctl start pigpiod.service
-systemctl status pigpiod.service
+# sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/pigpiod.service /etc/systemd/system
+# sudo systemctl enable pigpiod.service
+# sudo systemctl start pigpiod.service
+# systemctl status pigpiod.service
 
 # === setup RFR_Tools
 sudo git clone https://github.com/DexterInd/RFR_Tools.git /home/pi/Dexter/lib/Dexter/RFR_Tools

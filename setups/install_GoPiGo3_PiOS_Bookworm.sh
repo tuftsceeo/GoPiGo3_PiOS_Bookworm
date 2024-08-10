@@ -53,6 +53,10 @@ sudo pip3 install smbus-cffi --break-system-packages
 
 
 # ==== GPG3_POWER SERVICE ===
+echo -e "Removing non-working RPi.GPIO supplied with Bookworm"
+sudo apt remove python3-rpi.gpio
+echo-e "Installing working RPi.GPIO for gpg3_power.service"
+sudo pip3 install rpi-lgpio --break-system-packages
 cd ~
 sudo cp /home/pi/Dexter/GoPiGo3/Install/gpg3_power.service /etc/systemd/system
 sudo chmod 644 /etc/systemd/system/gpg3_power.service
@@ -104,3 +108,5 @@ else
     echo "GOPIGO3 SOFTWARE INSTALLATION SUCCESSFUL."
     echo "Optional - Remove installation files: rm -rf ~/GoPiGo3_PiOS_Bookworm/"
 fi
+echo "Attempt GoPiGo3 Example Read_Info.py"
+python3 Read_Info.py

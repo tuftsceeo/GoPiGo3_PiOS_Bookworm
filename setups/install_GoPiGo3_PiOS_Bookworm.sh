@@ -76,7 +76,7 @@ sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/Examples/easy_Distance_Sensor.py.
 # ==== GPG3_POWER SERVICE ===
 echo -e "Removing non-working RPi.GPIO supplied with Bookworm"
 sudo apt remove -y python3-rpi.gpio
-echo-e "Installing working RPi.GPIO for gpg3_power.service"
+echo -e "Installing working RPi.GPIO for gpg3_power.service"
 sudo pip3 install rpi-lgpio --break-system-packages
 cd ~
 sudo cp /home/pi/Dexter/GoPiGo3/Install/gpg3_power.service /etc/systemd/system

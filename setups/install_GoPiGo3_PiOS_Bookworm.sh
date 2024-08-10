@@ -116,27 +116,27 @@ else
         echo "i2c-dev added"
 fi
 
-echo "Making SPI changes in /boot/config.txt"
+echo "Making SPI changes in /boot/firmware/config.txt"
 
-if grep -q "#dtparam=spi=on" /boot/config.txt; then
-        sudo sed -i 's/#dtparam=spi=on/dtparam=spi=on/g' /boot/config.txt
+if grep -q "#dtparam=spi=on" /boot/firmware/config.txt; then
+        sudo sed -i 's/#dtparam=spi=on/dtparam=spi=on/g' /boot/firmware/config.txt
         echo "SPI enabled"
-elif grep -q "dtparam=spi=on" /boot/config.txt; then
+elif grep -q "dtparam=spi=on" /boot/firmware/config.txt; then
         echo "SPI already enabled"
 else
-        sudo sh -c "echo 'dtparam=spi=on' >> /boot/config.txt"
+        sudo sh -c "echo 'dtparam=spi=on' >> /boot/firmware/config.txt"
         echo "SPI enabled"
 fi
 
-echo "Enable I2C changes in /boot/config.txt"
+echo "Enable I2C changes in /boot/firmware/config.txt"
 
-if grep -q "#dtparam=i2c_arm=on" /boot/config.txt; then
-        sudo sed -i 's/#dtparam=i2c_arm=on/dtparam=i2c_arm=on/g' /boot/config.txt
+if grep -q "#dtparam=i2c_arm=on" /boot/firmware/config.txt; then
+        sudo sed -i 's/#dtparam=i2c_arm=on/dtparam=i2c_arm=on/g' /boot/firmware/config.txt
         echo "I2C enabled"
-elif grep -q "dtparam=i2c_arm=on" /boot/config.txt; then
+elif grep -q "dtparam=i2c_arm=on" /boot/firmware/config.txt; then
         echo "I2C already enabled"
 else
-        sudo sh -c "echo 'dtparam=i2c_arm=on' >> /boot/config.txt"
+        sudo sh -c "echo 'dtparam=i2c_arm=on' >> /boot/firmware/config.txt"
         echo "I2C enabled"
 fi
 

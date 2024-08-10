@@ -105,13 +105,13 @@ sudo systemctl daemon-reload
 sudo systemctl enable ip_feedback
 sudo service ip_feedback start
 
-echo "Adding SPI-dev in /etc/modules"
+echo "Adding i2c-dev in /etc/modules"
 
-if grep -q "spi-dev" /etc/modules; then
-        echo "spi-dev already there"
+if grep -q "i2c-dev" /etc/modules; then
+        echo "i2c-dev already there"
 else
-        echo spi-dev >> /etc/modules
-        echo "spi-dev added"
+        sudo sh -c "echo 'i2c-dev' >> /etc/modules"
+        echo "i2c-dev added"
 fi
 
 echo "Making SPI changes in /boot/config.txt"

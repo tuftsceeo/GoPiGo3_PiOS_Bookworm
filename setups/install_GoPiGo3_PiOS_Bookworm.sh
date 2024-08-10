@@ -14,42 +14,63 @@
 
 
 cd /home/pi
-git clone http://www.github.com/DexterInd/GoPiGo3.git /home/pi/Dexter/GoPiGo3
-sudo curl -kL dexterindustries.com/update_tools | bash -s -- --system-wide --use-python3-exe-too --install-deb-debs --install-python-package
-sudo apt install -y --no-install-recommends python3-curtsies
-git clone https://github.com/DexterInd/DI_Sensors.git /home/pi/Dexter/DI_Sensors
 
-# === pigpiod
-# wget https://github.com/joan2937/pigpio/archive/master.zip
-# unzip master.zip
-# cd pigpio-master
-# make
-# sudo make install
-# cd ..
-# rm master.zip
-
+echo -e "Get GoPiGo3 Changes For PiOS Bookworm"
 git clone https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm.git /home/pi/GoPiGo3_PiOS_Bookworm
 
-# sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/pigpiod.service /etc/systemd/system
-# sudo systemctl enable pigpiod.service
-# sudo systemctl start pigpiod.service
-# systemctl status pigpiod.service
+echo -e "Get Dexter/GoPiGo3/"
+git clone http://www.github.com/DexterInd/GoPiGo3.git /home/pi/Dexter/GoPiGo3
 
-# === setup RFR_Tools
-sudo git clone https://github.com/DexterInd/RFR_Tools.git /home/pi/Dexter/lib/Dexter/RFR_Tools
-sudo apt  install -y libffi-dev
+echo -e "Get Dexter/DI_Sensors/"
+git clone https://github.com/DexterInd/DI_Sensors.git /home/pi/Dexter/DI_Sensors
 
+echo -e "Get Dexter/RFR_Tools/"
+git clone https://github.com/DexterInd/RFR_Tools.git /home/pi/Dexter/lib/Dexter/RFR_Tools
+
+echo -e "Get list of serial numbers"
+cp /home/pi/Dexter/GoPiGo3/Install/list_of_serial_numbers.pkl /home/pi/Dexter/.list_of_serial_numbers.pkl
+
+echo -e "Setup non-root access rules"
+sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/99-com.rules /etc/udev/rules.d
+
+echo -e "Install requirements libffi-dev and python3-curtsies"
+sudo apt install -y libffi-dev  
+sudo apt install -y --no-install-recommends python3-curtsies
+
+echo -e "setup RFR_TOOLS"
 cd /home/pi/Dexter/lib/Dexter//RFR_Tools/miscellaneous/
-
 sudo mv di_i2c.py di_i2c.py.orig
 sudo mv setup.py setup.py.orig
-sudo cp ~/GoPiGo3_PiOS_Bookworm/i2c/di_i2c.py.bookworm di_i2c.py
-sudo cp ~/GoPiGo3_PiOS_Bookworm/RFR_Tools/setup.py .
+sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/i2c/di_i2c.py.bookworm di_i2c.py
+sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/RFR_Tools/setup.py .
 sudo python3 setup.py install
 
-# === also depends on smbus-cffi
 
+echo -e "install smbus-cffi python package"
 sudo pip3 install smbus-cffi --break-system-packages
+
+echo -e "setup GoPiGo3 Python API"
+cd /home/pi/Dexter/GoPiGo3/Software/Python
+sudo mv setup.py setup.py.orig
+sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/GPG_Soft_Python/setup.py .
+sudo mv gopigo3.py gopigo3.py.orig
+cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/GPG_Soft_Python/gopigo3.py.bookwormPi5 gopigo3.py
+sudo python3 setup.py install
+
+echo -e "setup di_sensors API"
+cd /home/pi/Dexter/DI_Sensors/Python/di_sensors
+mv easy_distance_sensor.py easy_distance_sensor.py.orig
+mv distance_sensor.py distance_sensor.py.orig
+cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/di_sensors/distance_sensor.py.bookworm distance_sensor.py
+cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/di_sensors/easy_distance_sensor.py.bookworm easy_distance_sensor.py
+cd /home/pi/Dexter/DI_Sensors/Python
+sudo python3 setup.py install
+
+
+echo -e "Eliminate software I2C from distance sensor"
+cd /home/pi/Dexter/GoPiGo3/Software/Python/Examples
+sudo mv easy_Distance_Sensor.py easy_Distance_Sensor.py.orig
+sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/Examples/easy_Distance_Sensor.py.bookworm easy_Distance_Sensor.py
 
 
 # ==== GPG3_POWER SERVICE ===
@@ -65,38 +86,29 @@ sudo systemctl enable gpg3_power.service
 sudo systemctl start gpg3_power.service
 systemctl status gpg3_power.service
 
-
-# ==== SETUP GoPiGo3 and DI_Sensors Python3 eggs
-cd /home/pi/Dexter/GoPiGo3/Software/Python
-
-sudo mv setup.py setup.py.orig
-sudo cp ~/GoPiGo3_PiOS_Bookworm/GPG_Soft_Python/setup.py .
-sudo python3 setup.py install
-
-cd /home/pi/Dexter/DI_Sensors/Python/di_sensors
-mv easy_distance_sensor.py easy_distance_sensor.py.orig
-mv distance_sensor.py distance_sensor.py.orig
-cp ~/GoPiGo3_PiOS_Bookworm/di_sensors/distance_sensor.py.bookworm distance_sensor.py
-cp ~/GoPiGo3_PiOS_Bookworm/di_sensors/easy_distance_sensor.py.bookworm easy_distance_sensor.py
-cd /home/pi/Dexter/DI_Sensors/Python
-sudo python3 setup.py install
-
-cd /home/pi/Dexter/GoPiGo3/Software/Python/Examples
-sudo mv easy_Distance_Sensor.py easy_Distance_Sensor.py.orig
-sudo cp ~/GoPiGo3_PiOS_Bookworm/Examples/easy_Distance_Sensor.py.bookworm easy_Distance_Sensor.py
-
-
-
-# ==== Setup non-root access rules ====
-
-sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/99-com.rules /etc/udev/rules.d
-
-cp /home/pi/Dexter/GoPiGo3/Install/list_of_serial_numbers.pkl /home/pi/Dexter/.list_of_serial_numbers.pkl
-
 # === ESPEAK-NG
 sudo apt install -y espeak-ng
 sudo pip3 install py-espeak-ng --break-system-packages
 espeak-ng "Am I alive? Can you hear me?"
+
+
+# installs and configures the ip_feedback service
+cd /home/pi/GoPiGo3_PiOS_Bookworm/setups
+chmod 777 ip_feedback.sh
+
+echo "copying ip_feedback.sh to /home/pi"
+cp ip_feedback.sh /home/pi
+
+echo "copying ip_feedback.service to /etc/systemd/system"
+sudo cp etc_systemd_system.ip_feedback.service /etc/systemd/system/ip_feedback.service
+sudo systemctl daemon-reload
+sudo systemctl enable ip_feedback
+sudo service ip_feedback start
+
+
+
+
+
 
 installresult=$(python3 -c "import gopigo3; g = gopigo3.GoPiGo3()" 2>&1)
 if [[ $installresult == *"ModuleNotFoundError"* ]]; then
@@ -108,5 +120,7 @@ else
     echo "GOPIGO3 SOFTWARE INSTALLATION SUCCESSFUL."
     echo "Optional - Remove installation files: rm -rf ~/GoPiGo3_PiOS_Bookworm/"
 fi
-echo "Attempt GoPiGo3 Example Read_Info.py"
+
+echo -e "Attempt GoPiGo3 Example Read_Info.py"
+cd /home/pi/Dexter/GoPiGo3/Software/Python/Examples
 python3 Read_Info.py

@@ -1,4 +1,3 @@
-
 /*
  *  https://www.dexterindustries.com/GoPiGo3/
  *  https://github.com/DexterInd/GoPiGo3
@@ -7,15 +6,16 @@
  *  Released under the MIT license (http://choosealicense.com/licenses/mit/).
  *  For more information see https://github.com/DexterInd/GoPiGo3/blob/master/LICENSE.md
  *
- *  This is an example for using an ultrasonic sensor with the GoPiGo3.
+ *  This is an example for using an ultrasonic sensor and IR receiver with the GoPiGo3.
  *
- *  Hardware: Connect a "grove ultrasonic ranger" to GPG3 AD2 port.
- *            (Not HC-SR04 - those do not work with this code)
+ *  Hardware: Connect a grove ultrasonic sensor to GPG3 AD1 port, and IR receiver to GPG3 AD2 port.
  *
- *  Results:  You should see the value go down and up as you move your hand in front of the Grove Ultrasonic Ranger.
+ *  Results:  When you run this program, you should see the values for each sensor.
  *
+ *  Example compile command:
+ *    g++ -o sensors sensors.cpp ../GoPiGo3.cpp -I..
  *  Example run command:
- *    ./ultrasonic
+ *    sudo ./sensors
  *
  */
 
@@ -33,17 +33,16 @@ int main(){
 
   GPG.detect(); // Make sure that the GoPiGo3 is communicating and that the firmware is compatible with the drivers.
 
-  GPG.set_grove_type(GROVE_2, GROVE_TYPE_US); //GROVE_1 or GROVE2 as wired
-
+  GPG.set_grove_type(GROVE_1, GROVE_TYPE_US);
+  GPG.set_grove_type(GROVE_2, GROVE_TYPE_IR_DI_REMOTE);
   sensor_ultrasonic_t US;
-
-  usleep(50000); // wait 0.05sec for sensor to be configured
+  sensor_infrared_gobox_t IR;
 
   while(true){
-    int USerror = GPG.get_grove_value(GROVE_2, &US);  // GROVE_1 or GROVE_2 as wired
-    printf("US: Error %d  %4dmm \n", USerror, US.mm);
-    usleep(20000);  // sleep for 0.02 sec
-
+    int USerror = GPG.get_grove_value(GROVE_1, &US);
+    int IRerror = GPG.get_grove_value(GROVE_2, &IR);
+    printf("US: Error %d  %4dmm    IR: Error %d  button %d\n", USerror, US.mm, IRerror, IR.button);
+    usleep(20000);
   }
 }
 

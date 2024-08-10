@@ -9,7 +9,7 @@
 # - Must be user pi when running this script
 
 # USAGE:  
-#    wget https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm/setups/install_GoPiGo3_PiOS_Bookworm.sh
+#    wget https://raw.githubusercontent.com/slowrunner/GoPiGo3_PiOS_Bookworm/main/setups/install_GoPiGo3_PiOS_Bookworm.sh
 #    source install_GoPiGo3_PiOS_Bookworm.sh
 
 

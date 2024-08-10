@@ -89,6 +89,8 @@ systemctl status gpg3_power.service
 # === ESPEAK-NG
 sudo apt install -y espeak-ng
 sudo pip3 install py-espeak-ng --break-system-packages
+echo "Setting Volume to 80%"
+amixer -D pulse sset Master 80%
 espeak-ng "Am I alive? Can you hear me?"
 
 

@@ -4,6 +4,14 @@
 # - PiOS Bookworm 32-bit Desktop
 # - PiOS Bookworm 64-bit Desktop
 
+# REQUIREMENTS:
+# - System must have pi user
+# - Must be user pi when running this script
+
+# USAGE:  
+#    wget https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm/setups/install_GoPiGo3_PiOS_Bookworm.sh
+#    source install_GoPiGo3_PiOS_Bookworm.sh
+
 
 cd /home/pi
 git clone http://www.github.com/DexterInd/GoPiGo3.git /home/pi/Dexter/GoPiGo3
@@ -20,7 +28,7 @@ git clone https://github.com/DexterInd/DI_Sensors.git /home/pi/Dexter/DI_Sensors
 # cd ..
 # rm master.zip
 
-git clone https://github.com/slowrunner/bookworm_test.git /home/pi/GoPiGo3_PiOS_Bookworm
+git clone https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm.git /home/pi/GoPiGo3_PiOS_Bookworm
 
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/pigpiod.service /etc/systemd/system
 sudo systemctl enable pigpiod.service

@@ -150,8 +150,8 @@ elif [[ $installresult == *"IOError"* ]]; then
    echo "Ensure SPI is enabled in raspi-config."
 else
     echo "GOPIGO3 SOFTWARE INSTALLATION SUCCESSFUL."
+    sleep 10
 fi
+echo -e "\nREBOOTING...."
+sudo reboot 
 
-echo -e "Attempt GoPiGo3 Example Read_Info.py"
-cd /home/pi/Dexter/GoPiGo3/Software/Python/Examples
-python3 Read_Info.py

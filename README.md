@@ -1,12 +1,11 @@
-# bookworm_test
-GoPiGo3 on Bookworm  - especially i2c, i2c distance sensor, Grove Ultrasonic Ranger, and MPU9250 IMU
+# GoPiGo3_PiOS_Bookworm
 
+Install GoPiGo3 on PiOS Bookworm
 
-- Installed current (Oct 7,2023) 64-bit PiOS Desktop (bullseye)
-- Upgraded OS to bookworm (Debian 12)
-- Installed GoPiGo3 software
-- Removed GoPiGo3 software I2C (depended on wiringpi not avail on bookworm)
+- Removed GoPiGo3 software I2C (depended on wiringpi/pigpio not avail on PiOS Bookworm/Pi5)
 - Updated distance_sensor and easy_distance_sensor to default to hardware I2C
-- Passed all basic GoPiGo3 tests
-- tested pypi imusensor package for MPU9250 IMU (appears to work, board is partially fried)
- 
+- Recoded gopigo3_power.py to use gpiod
+- Lowered the GoPiGo3 SPI transfer rate to 432000 for increased reliability under Bookworm
+- Does not install GoPiGo3 desktop apps 
+
+

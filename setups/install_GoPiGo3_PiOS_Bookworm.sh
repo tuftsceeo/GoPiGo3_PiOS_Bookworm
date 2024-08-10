@@ -105,10 +105,29 @@ sudo systemctl daemon-reload
 sudo systemctl enable ip_feedback
 sudo service ip_feedback start
 
+echo "Adding SPI-dev in /etc/modules"
+
+if grep -q "spi-dev" /etc/modules; then
+        echo "spi-dev already there"
+else
+        echo spi-dev >> /etc/modules
+        echo "spi-dev added"
+fi
+
+ echo "Making SPI changes in /boot/config.txt"
+
+if grep -q "#dtparam=spi=on" /boot/config.txt; then
+        sudo sed -i 's/#dtparam=spi=on/dtparam=spi=on/g' /boot/config.txt
+        echo "SPI enabled"
+elif grep -q "dtparam=spi=on" /boot/config.txt; then
+        echo "SPI already enabled"
+else
+        sudo sh -c "echo 'dtparam=spi=on' >> /boot/config.txt"
+        echo "SPI enabled"
+fi
 
 
-
-
+echo "Check Installation Status"
 
 installresult=$(python3 -c "import gopigo3; g = gopigo3.GoPiGo3()" 2>&1)
 if [[ $installresult == *"ModuleNotFoundError"* ]]; then
@@ -118,7 +137,6 @@ elif [[ $installresult == *"IOError"* ]]; then
    echo "Ensure SPI is enabled in raspi-config."
 else
     echo "GOPIGO3 SOFTWARE INSTALLATION SUCCESSFUL."
-    echo "Optional - Remove installation files: rm -rf ~/GoPiGo3_PiOS_Bookworm/"
 fi
 
 echo -e "Attempt GoPiGo3 Example Read_Info.py"

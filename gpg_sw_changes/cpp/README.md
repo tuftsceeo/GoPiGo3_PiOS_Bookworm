@@ -10,7 +10,7 @@ of the official GoPiGo3 Github repository, with the following differences:
 
 
 ### Setup:  
-- sudo apt install cmake  
+ 
 - cmake CMakeLists.txt  
 - make  
 - [make install] will put:  

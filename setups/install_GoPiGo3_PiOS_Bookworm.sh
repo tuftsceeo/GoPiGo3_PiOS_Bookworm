@@ -73,6 +73,9 @@ cd /home/pi/Dexter/GoPiGo3/Software/Python/Examples
 sudo mv easy_Distance_Sensor.py easy_Distance_Sensor.py.orig
 sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/Examples/easy_Distance_Sensor.py.bookworm easy_Distance_Sensor.py
 
+echo -e "Copy extended C++ examples to /home/pi/Dexter/GoPiGo3/Software/cpp"
+sudo apt install -y cmake
+sudo cp -r ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/cpp /home/pi/Dexter/GoPiGo3/Software/
 
 # ==== GPG3_POWER SERVICE ===
 echo -e "Removing non-working RPi.GPIO supplied with Bookworm"

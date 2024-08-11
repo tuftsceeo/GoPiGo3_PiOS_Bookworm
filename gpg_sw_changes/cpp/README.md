@@ -7,7 +7,7 @@ This folder mimicks the /home/pi/Dexter/GoPiGo3/Software/C/ folder
 of the official GoPiGo3 Github repository, with the following differences:  
 - executables are placed in ./build/  (CMakeLists.txt change)  
 - new folder robot/ contains a test robot derived from Examples/drive.cpp  
-
+- start on an EasyGoPiGo3 C++ class
 
 ### Setup: (copy folder to user tree to preserve original files) 
 - cp -r /home/pi/Dexter/GoPiGo3/Software/cpp ~

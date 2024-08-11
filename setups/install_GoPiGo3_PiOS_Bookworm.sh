@@ -7,6 +7,7 @@
 # REQUIREMENTS:
 # - System must have pi user
 # - Must be user pi when running this script
+# - Do not need to configure i2c and spi - script will setup
 
 # USAGE:  
 #    wget https://raw.githubusercontent.com/slowrunner/GoPiGo3_PiOS_Bookworm/main/setups/install_GoPiGo3_PiOS_Bookworm.sh

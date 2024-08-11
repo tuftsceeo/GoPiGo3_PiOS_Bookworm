@@ -77,6 +77,16 @@ echo -e "Copy extended C++ examples to /home/pi/Dexter/GoPiGo3/Software/cpp"
 sudo apt install -y cmake
 sudo cp -r ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/cpp /home/pi/Dexter/GoPiGo3/Software/
 
+# install control panel on desktop
+if [[ -d /home/pi/Desktop ]]; then
+    cp /home/pi/Dexter/GoPiGo3/Software/Python/Examples/Control_Panel/gopigo3_control_panel.desktop /home/pi/Desktop/gopigo3_control_panel.desktop
+fi
+
+# install calibration panel on desktop
+if [[ -d /home/pi/Desktop ]]; then
+    cp /home/pi/Dexter/GoPiGo3/Software/Python/Examples/Calibration_Panel/gopigo3_calibration.desktop /home/pi/Desktop/gopigo3_calibration.desktop
+fi
+
 # ==== GPG3_POWER SERVICE ===
 echo -e "Removing non-working RPi.GPIO supplied with Bookworm"
 sudo apt remove -y python3-rpi.gpio

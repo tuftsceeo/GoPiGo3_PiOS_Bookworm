@@ -17,7 +17,7 @@
 cd /home/pi
 
 echo -e "Get GoPiGo3 Changes For PiOS Bookworm"
-git clone https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm.git /home/pi/GoPiGo3_PiOS_Bookworm
+git clone https://github.com/tuftsceeo/GoPiGo3_PiOS_Bookworm.git /home/pi/GoPiGo3_PiOS_Bookworm
 
 echo -e "Get Dexter/GoPiGo3/"
 git clone http://www.github.com/DexterInd/GoPiGo3.git /home/pi/Dexter/GoPiGo3

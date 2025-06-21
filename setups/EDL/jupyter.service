@@ -1,0 +1,12 @@
+[Unit]
+Description=JupyterLab Server
+After=network.target
+
+[Service]
+User=jupyter  
+WorkingDirectory=/home/jupyter/ 
+ExecStart= /usr/local/bin/jupyter-lab
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

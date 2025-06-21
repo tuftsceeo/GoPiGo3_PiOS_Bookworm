@@ -1,0 +1,14 @@
+[Unit]
+Description=Websockify WebSocket to TCP proxy
+After=network.target wayvnc.service
+Requires=wayvnc.service
+
+[Service]
+Type=simple
+User=vnc
+ExecStart=/usr/bin/websockify --web /usr/share/novnc 6080 127.0.0.1:5900
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

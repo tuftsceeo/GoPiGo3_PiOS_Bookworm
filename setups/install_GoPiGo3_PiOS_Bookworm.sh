@@ -82,3 +82,5 @@ if [[ -d /home/pi/Desktop ]]; then
     cp /home/pi/Dexter/GoPiGo3/Software/Python/Examples/Calibration_Panel/gopigo3_calibration.desktop /home/pi/Desktop/gopigo3_calibration.desktop
 fi
 
+echo -e "PART 1 - DONE RUNNING, NOT TESTED"
+cd /home/pi

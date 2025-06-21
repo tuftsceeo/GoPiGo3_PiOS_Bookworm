@@ -11,13 +11,19 @@ sudo chmod 644 /etc/systemd/system/gpg3_power.service
 sudo systemctl daemon-reload
 sudo systemctl enable gpg3_power.service
 sudo systemctl start gpg3_power.service
-systemctl status gpg3_power.service
 
 # === ESPEAK-NG
-sudo apt install -y espeak-ng
+#sudo apt install -y espeak-ng
+sudo apt install espeak-ng espeak-ng-data libespeak-ng-dev 
+# needed for py-espeak-ng 
+echo "Installing py-espeak-ng"
 sudo pip3 install py-espeak-ng --break-system-packages
+sudo apt-get install mbrola mbrola-us1 mbrola-us2 mbrola-us3
+# get MBROLA voices
+echo "Installing pygame"
+sudo apt install python3-pygame
 echo "Setting Volume to 100%"
-amixer -D pulse sset Master 100%
+amixer -D pulse set Master 100%
 espeak-ng "Am I alive? Can you hear me?"
 
 

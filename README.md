@@ -11,7 +11,6 @@ Installation Of GoPiGo3 Software on PiOS Bookworm
 
 
 ### Script works on:
-- PiOS Bookworm 32-bit Desktop
 - PiOS Bookworm 64-bit Desktop
 
 ### REQUIREMENTS
@@ -21,7 +20,7 @@ Installation Of GoPiGo3 Software on PiOS Bookworm
 
 ### INSTALLATION  
 ```
-wget https://raw.githubusercontent.com/slowrunner/GoPiGo3_PiOS_Bookworm/main/setups/install_GoPiGo3_PiOS_Bookworm.sh
+wget https://raw.githubusercontent.com/tuftsceeo/GoPiGo3_PiOS_Bookworm/main/setups/install_GoPiGo3_PiOS_Bookworm.sh
 source install_GoPiGo3_PiOS_Bookworm.sh
 ```
 

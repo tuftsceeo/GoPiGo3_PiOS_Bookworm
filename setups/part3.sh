@@ -4,7 +4,6 @@ sudo apt upgrade
 
 sudo apt install wayvnc novnc websockify
 
-
 echo "REMINDER - You need to enable VNC in sudo raspi-config"
 echo "Interfaces -> VNC -> Enable"
 sleep 30
@@ -29,7 +28,11 @@ sudo apt install avahi-autoipd bc
 sudo apt install -y mariadb-server mariadb-client
 
 # Copy EDL Webpage 
+sudo rm -r /var/www
+sudo mkdir -p /var/www/html
 sudo cp -r ~/GoPiGo3_PiOS_Bookworm/web/html /var/www
+sudo ln -s /etc/hostname /var/www/html/hostname
+
 
 # Set up JupyterLab and Python packages
 sudo apt install python3-setuptools
@@ -68,5 +71,12 @@ jupyter lab --generate-config
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/jupyter_lab_config.py ~/.jupyter/jupyter_lab_config.py
 jupyter lab password
 
-
+# Copy the Jupyter service file to systemd
 sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/EDL/jupyter.service /etc/systemd/system/jupyter.service
+sudo systemctl daemon-reload
+sudo systemctl enable jupyter.service 
+sudo systemctl start jupyter.service 
+
+# Install Shell In A Box
+sudo apt install shellinabox
+sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/shellinabox_config /etc/default/shellinabox

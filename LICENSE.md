@@ -1,5 +1,27 @@
-                    GNU GENERAL PUBLIC LICENSE
-                       Version 3, 29 June 2007
+
+### Attribution and Notice of Modifications:
+
+The EDL GoPiGo was originally based upon:
+- [Raspbian_For_Robots](https://github.com/DexterInd/Raspbian_For_Robots) Copyright (c) 2019 Dexter Industries and Shared Under the MIT License
+
+In 2021, this was adapted for Buster based on updates to:
+- [GoPiGo3 Software](https://github.com/DexterInd/GoPiGo3) Copyright (c) 2019 Dexter Industries and Shared Under the MIT License
+
+In 2025, we upgraded EDL GoPiGo function on RPi 4B building on modifications from:
+- [GoPiGo3_PiOS_Bookworm](https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm) as shared by [slowrunner/cyclicalobsessive](cyclical_obsessive@fosstodon.org) under  GPL-3.0 license
+
+These original sources have been modified.
+
+Copyright (c) 2025 The Tufts University Center for Engineering Education and Outreach
+Shared under GPL-3.0 License
+
+---
+
+---
+
+**GNU GENERAL PUBLIC LICENSE**
+
+Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies

@@ -43,7 +43,7 @@
 <article>
 <section>
   <p>
-    Welcome to the EDL for Robots OS v.B23.1, our custom software for your GoPiGo Robots!
+    Welcome to the EDL for Robots OS v.25.1, our custom software for your GoPiGo Robots!
   </p>
   <p>
     To get started programming your robot, we will go through Jupyter Labs. an interactive textbook with programming built-in. 
@@ -79,7 +79,7 @@
 
 <div class="mydiv">
   <section class="vnc">
-    <a href=" http://<?php echo $dexhost; ?>:8001/vnc.html?host=<?php echo $dexhost; ?>&port=8001&autoconnect=true&password=robots1234&scaleViewport=true" target="_blank">
+    <a href=" http://<?php echo $dexhost; ?>:6080/vnc.html?autoconnect=true&scaleViewport=true" target="_blank">
       <img src="img/viewer.svg" onerror="this.src='img/viewer.png'; this.onerror=null;"style="width:90px;">
       <span class="button">Launch Desktop (VNC)</span>
     </a>
@@ -103,7 +103,7 @@
 <h1 class="divheader">Robot Information</h1>
 <div class="mydiv">
      <section class="gpgos">
-    <a href="http://<?php echo $dexhost; ?>:100" target="_blank">
+    <a href="http://<?php echo $dexhost; ?>:100" target="_blank" style="cursor: default;">
       <img src="img/GoPiGo_logo.png" onerror="this.src='img/GoPiGo_logo.png'; this.onerror=null;"style="height:90px;">
     </a>
   </section>

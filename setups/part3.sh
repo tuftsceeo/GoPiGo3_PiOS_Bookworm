@@ -4,10 +4,6 @@ sudo apt upgrade
 
 sudo apt install wayvnc novnc websockify
 
-echo "REMINDER - You need to enable VNC in sudo raspi-config"
-echo "Interfaces -> VNC -> Enable"
-sleep 30
-
 # Copy the WayVNC configuration file
 sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/EDL/wayvnc_config /etc/wayvnc/config
 
@@ -67,9 +63,13 @@ sudo usermod -a -G lpadmin jupyter
 echo "ENTER SOME JUPYTER PASSWORDS PLEASE"
 sleep 10
 su jupyter
+cd ~
 jupyter lab --generate-config 
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/jupyter_lab_config.py ~/.jupyter/jupyter_lab_config.py
 jupyter lab password
+
+
+
 
 # Copy the Jupyter service file to systemd
 sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/EDL/jupyter.service /etc/systemd/system/jupyter.service
@@ -80,3 +80,14 @@ sudo systemctl start jupyter.service
 # Install Shell In A Box
 sudo apt install shellinabox
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/shellinabox_config /etc/default/shellinabox
+
+su jupyter
+cd ~
+sudo cp /home/pi/Dexter/GoPiGo3/Software/Python/Examples ~/Examples
+
+
+echo "REMINDER - You need to clone in the EDL jupyter notebooks"
+cd ~
+echo "git clone https://your-username:your-token@github.com/tuftsceeo/EDL.git"
+sleep 30
+

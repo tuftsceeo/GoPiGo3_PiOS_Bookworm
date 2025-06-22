@@ -12,6 +12,13 @@ sudo systemctl daemon-reload
 sudo systemctl enable gpg3_power.service
 sudo systemctl start gpg3_power.service
 
+sudo cp /home/pi/Dexter/GoPiGo3/Install/antenna_wifi.service /etc/systemd/system
+sudo chmod 644 /etc/systemd/system/antenna_wifi.service
+sudo systemctl daemon-reload
+sudo systemctl enable antenna_wifi.service
+sudo systemctl start antenna_wifi.service
+       
+
 # === ESPEAK-NG
 #sudo apt install -y espeak-ng
 sudo apt install espeak-ng espeak-ng-data libespeak-ng-dev 
@@ -85,5 +92,9 @@ else
     echo "GOPIGO3 SOFTWARE INSTALLATION SUCCESSFUL."
     sleep 10
 fi
-echo -e "\nREBOOTING...."
-sudo reboot 
+echo -e "\n DONE --- READY TO REBOOT...."
+
+echo "REMINDER - You need to enable VNC in sudo raspi-config"
+echo "Interfaces -> VNC -> Enable"
+sleep 30
+

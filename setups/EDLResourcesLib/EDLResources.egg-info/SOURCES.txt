@@ -1,0 +1,6 @@
+EDLResources.py
+setup.py
+EDLResources.egg-info/PKG-INFO
+EDLResources.egg-info/SOURCES.txt
+EDLResources.egg-info/dependency_links.txt
+EDLResources.egg-info/top_level.txt

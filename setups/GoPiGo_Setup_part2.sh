@@ -22,7 +22,6 @@ sudo chmod 644 /etc/systemd/system/antenna_wifi.service
 sudo systemctl daemon-reload
 sudo systemctl enable antenna_wifi.service
 sudo systemctl start antenna_wifi.service
-       
 
 # === ESPEAK-NG
 #sudo apt install -y espeak-ng
@@ -98,7 +97,8 @@ else
     sleep 10
 fi
 
-
+sudo rm /home/pi/Dexter/gpg3_config.json 
+# remove old GPG config file in case there is one from prior image
 cd /home/pi/Dexter/GoPiGo3/Troubleshooting/
 
 echo "==============================="
@@ -108,8 +108,6 @@ echo "==============================="
 echo "GoPiGo3 Troubleshooting Script log" > log.txt
 sudo bash hardware_and_firmware_test.sh 2>&1| tee -a log.txt
 echo "==============================="
-
-
 
 
 echo -e "\n DONE --- READY TO REBOOT...."

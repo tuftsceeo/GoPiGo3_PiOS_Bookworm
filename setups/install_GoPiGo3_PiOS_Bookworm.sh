@@ -83,4 +83,5 @@ if [[ -d /home/pi/Desktop ]]; then
 fi
 
 echo -e "PART 1 - DONE RUNNING, NOT TESTED"
+echo -e "Now PART 2 - run setups/GoPiGo_Setup_part2.sh"
 cd /home/pi

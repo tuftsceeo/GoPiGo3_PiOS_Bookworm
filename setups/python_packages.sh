@@ -7,6 +7,7 @@ sudo pip3 install ipywidgets --break-system-packages
 
 sudo pip3 install piServoCtl --break-system-packages
 sudo pip install adafruit-circuitpython-dotstar --break-system-packages
+sudo pip uninstall Jetson.GPIO --break-system-packages -y
 
 sudo pip3 install matplotlib  --break-system-packages
 sudo pip3 install google-cloud-vision --break-system-packages

@@ -1,3 +1,8 @@
+#!/bin/bash
+# This includes installation of necessary packages, configuration of ip address speaking, power and
+# wifi_led antenna services and tests setup of the GoPiGo3 Python API.
+# ===========
+
 # ==== GPG3_POWER SERVICE ===
 echo -e "Removing non-working RPi.GPIO supplied with Bookworm"
 sudo apt remove -y python3-rpi.gpio
@@ -92,9 +97,27 @@ else
     echo "GOPIGO3 SOFTWARE INSTALLATION SUCCESSFUL."
     sleep 10
 fi
+
+
+cd /home/pi/Dexter/GoPiGo3/Troubleshooting/
+
+echo "==============================="
+echo "GoPiGo3 Firmware and Hardware Test"
+echo "==============================="
+
+echo "GoPiGo3 Troubleshooting Script log" > log.txt
+sudo bash hardware_and_firmware_test.sh 2>&1| tee -a log.txt
+echo "==============================="
+
+
+
+
 echo -e "\n DONE --- READY TO REBOOT...."
 
 echo "REMINDER - You need to enable VNC in sudo raspi-config"
 echo "Interfaces -> VNC -> Enable"
+echo "==============================="
 sleep 30
+
+echo "Next PART 3 - run setups/start_EDL_core_services.sh"
 

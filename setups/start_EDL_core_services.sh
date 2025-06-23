@@ -1,3 +1,8 @@
+#!/bin/bash
+# Starts WayVNC, NoVNC, Websockify, JupyterLab, and Shell In A Box on a GoPiGo3 PiOS Bookworm system.
+# Copies EDL Web Homepage.
+# ==========
+
 # ==== EDL Set Ups ===
 sudo apt update
 sudo apt upgrade 
@@ -84,7 +89,8 @@ sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/shellinabox_config /etc/defaul
 su jupyter
 cd ~
 sudo cp /home/pi/Dexter/GoPiGo3/Software/Python/Examples ~/Examples
-
+sudo chgrp -R users /home 
+sudo chmod -R g+rwx /home
 
 echo "REMINDER - You need to clone in the EDL jupyter notebooks"
 cd ~

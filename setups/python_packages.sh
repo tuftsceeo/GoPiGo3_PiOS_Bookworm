@@ -6,8 +6,6 @@ sudo pip3 install opencv-python --break-system-packages
 sudo pip3 install ipywidgets --break-system-packages
 
 sudo pip3 install piServoCtl --break-system-packages
-sudo pip install adafruit-circuitpython-dotstar --break-system-packages
-sudo pip uninstall Jetson.GPIO --break-system-packages -y
 
 sudo pip3 install matplotlib  --break-system-packages
 sudo pip3 install google-cloud-vision --break-system-packages
@@ -31,5 +29,10 @@ sudo pip install  jupyterlab-language-pack-fr-FR --break-system-packages
 sudo pip install jupyterlab-language-pack-de-DE --break-system-packages
 sudo pip install  jupyterlab-language-pack-id-ID --break-system-packages
 sudo pip install  jupyterlab-language-pack-es-ES --break-system-packages
+
+sudo pip install simplejpeg==1.8.2 --break-system-packages # Fixes the numpy 2 issue
+
+sudo pip install adafruit-circuitpython-dotstar --break-system-packages # This wants the Jetson.GPIO package so not currently working
+sudo pip uninstall Jetson.GPIO --break-system-packages -y # Uninstall Jetson.GPIO as it causes issues on Pi
 
 # pip freeze > /home/pi/GoPiGo3_PiOS_Bookworm/py_packages.txt

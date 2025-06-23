@@ -7,7 +7,6 @@ sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/jupyter_lab_config.py /home/ju
 echo "ENTER REGULAR EDL PASSWORD"
 jupyter lab password
 
-
 # Copy the Jupyter service file to systemd
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/jupyter.service /etc/systemd/system/jupyter.service
 sudo systemctl daemon-reload

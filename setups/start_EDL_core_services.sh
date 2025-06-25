@@ -64,5 +64,8 @@ sudo usermod -a -G i2c jupyter
 sudo usermod -a -G gpio jupyter
 sudo usermod -a -G lpadmin jupyter
 
+# Give jupyter user necessary permissions
+sudo chgrp -R users /home 
+sudo chmod -R g+rwx /home
 
 

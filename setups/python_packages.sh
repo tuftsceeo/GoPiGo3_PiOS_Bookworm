@@ -38,6 +38,6 @@ sudo pip uninstall Jetson.GPIO --break-system-packages -y # Uninstall Jetson.GPI
 # Setup EDL Resources Library
 cd ~
 cd GoPiGo3_PiOS_Bookworm/setups/EDLResourcesLib
-sudo pip3 install . -e --break-system-packages
+sudo pip3 install -e . --break-system-packages
 
 # pip freeze > /home/pi/GoPiGo3_PiOS_Bookworm/py_packages.txt

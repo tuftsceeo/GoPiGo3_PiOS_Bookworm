@@ -59,42 +59,96 @@ class HiddenPrints:
         sys.stdout.close()
         sys.stdout = self._original_stdout
 
-def stop_speaking_ip():        
-    switch_to_pi()
-    stop_speaking_ip_helper()
-    time.sleep(1)
-    stop_speaking_ip_helper()
-    time.sleep(1)
-    switch_to_jupyter()
-    print('Pi is not speaking its ip address, restart the pi to have it speak the address again.')
+def speak(text, speed=170, voice="mb-us2", pitch=70, gap=40):
     
-#stops the pi from speaking its ip all the time
-def stop_speaking_ip_helper():
-    #switch_to_pi()
-    cmd=['ps','aux']
-    output=subprocess.Popen(cmd,stdout=subprocess.PIPE).communicate()
-    output=str(output[0]).split('\\n')
-    processesToKill=[]
-    for p in output:
-        if 'aud.sh'  in p: #this is the file that makes it speak its ip
-            processesToKill.append(p)
-    if len(processesToKill)>0: #if it is running
-        for p in processesToKill:
-            info = p.split(' ') #kill all of its processes
-            for entry in info:
-                if entry.isdigit():
-                    sudoPassword = 'jupyter'
-                    p = Popen(['sudo', 'kill', entry], stdin=PIPE, stderr=PIPE, universal_newlines=True)
-                    time.sleep(1)
-                    sudo_prompt = p.communicate(sudoPassword + '\n')[1]
-                    # os.system('kill %d'%(int(entry)))
-                    break
-        #print('Pi is no longer speaking its ip address, restart the pi to have it speak the address again.')
-        #switch_to_jupyter()
-    #else:
-        #continue
-        #print('Pi is not speaking its ip address, restart the pi to have it speak the address again.')
-        #switch_to_jupyter()
+    """
+    Make the robot speak text
+    
+    Args:
+        text (str): Text to speak
+        speed (int): Speaking speed (default 170)
+        voice (str): Voice to use (default "mb-us2", or "en")
+        pitch (int): Pitch of the voice (default 70)
+        gap (int): Gap between words in milliseconds (default 40)
+    """
+    try:
+        # Ensure environment is set
+        env = os.environ.copy()
+        env['XDG_RUNTIME_DIR'] = '/run/user/1001'
+        
+        # Run espeak-ng with parameters -s 180 -p 70 -g 8 -v mb-us2
+        cmd = ['espeak-ng', '-s', str(speed), '-p', str(pitch), '-g', str(gap), '-v', voice, str(text)]
+        subprocess.run(cmd, env=env, check=True, stderr=subprocess.DEVNULL)
+        
+    except subprocess.CalledProcessError:
+        print(f"⚠️  Speech failed: Could not say '{text}'")
+    except FileNotFoundError:
+        print("⚠️  espeak-ng not found")
+    except Exception as e:
+        print(f"⚠️  Audio error: {e}")
+
+def robot_say(text):
+    """Alias for speak()"""
+    speak(text)
+
+# IP Announcement Control
+def stop_ip_announcements():
+    """Stop the robot from announcing its IP address"""
+    try:
+        result = subprocess.run(['sudo', 'systemctl', 'stop', 'ip_feedback.service'], 
+                              capture_output=True, text=True, check=True)
+        print("🔇 IP announcements stopped!")
+        time.sleep(2)
+        speak("IP Announcements Stopped")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to stop IP announcements: {e}")
+        return False
+
+def start_ip_announcements():
+    """Start the robot announcing its IP address again"""
+    try:
+        speak("Starting IP Announcements")
+        time.sleep(2)
+        result = subprocess.run(['sudo', 'systemctl', 'start', 'ip_feedback.service'], 
+                              capture_output=True, text=True, check=True)
+        print("🔊 IP announcements started!")
+        
+        
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to start IP announcements: {e}")
+        return False
+
+def quiet_mode():
+    if stop_ip_announcements():
+        print("Entering quiet mode. Ready to program!")
+
+def ip_status():
+    """Check and announce IP announcement status"""
+    try:
+        result = subprocess.run(['sudo', 'systemctl', 'is-active', 'ip_feedback.service'], 
+                              capture_output=True, text=True)
+        is_active = result.stdout.strip() == 'active'
+        if is_active:
+            print("🔊 IP announcements: ON")
+            speak("IP announcements are on")
+        else:
+            print("🔇 IP announcements: OFF")
+            speak("IP announcements are off")
+        return is_active
+    except:
+        print("❓ Could not check IP announcement status")
+        return None
+
+# Test function
+def test_audio():
+    """Test robot audio system"""
+    stop_ip_announcements()
+    print("🤖 Testing robot audio...")
+    speak("Hello! Robot audio is working correctly.")
+    print("✅ Audio test complete!")
+    start_ip_announcements()
 
 def switch_to_pi():
     sudoPassword = 'robots1234'

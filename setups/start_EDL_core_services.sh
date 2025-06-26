@@ -92,3 +92,6 @@ fi
 
 # Set up passwordless sudo for jupyter for the ip_feedback service
 echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/systemctl * ip_feedback*, /bin/systemctl * ip_feedback*" | sudo tee -a /etc/sudoers
+
+# Set up passwordless sudo for jupyter for WiFi Network Management commands
+echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/nmcli *" | sudo tee -a /etc/sudoers

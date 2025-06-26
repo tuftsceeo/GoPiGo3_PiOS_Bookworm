@@ -150,48 +150,219 @@ def test_audio():
     print("✅ Audio test complete!")
     start_ip_announcements()
 
-def switch_to_pi():
-    sudoPassword = 'robots1234'
-    command = 'su pi'.split()
-    p = Popen(['sudo', '-S'] + command, stdin=PIPE, stderr=PIPE, universal_newlines=True)
-    sudo_prompt = p.communicate(sudoPassword + '\n')[1]
-
-def switch_to_jupyter():
-    sudoPassword = 'jupyter'
-    command = 'su jupyter'.split()
-    p = Popen(['sudo', '-S'] + command, stdin=PIPE, stderr=PIPE, universal_newlines=True)
-    sudo_prompt = p.communicate(sudoPassword + '\n')[1]
-
 #shuts down pi
 def shutdown_pi():
     subprocess.Popen(['sudo','shutdown','-h','now'])
     
+"""
+EDL Robot Take-Home WiFi Setup
+Configure home WiFi before leaving lab (headless mode)
+"""
+
+import subprocess
 import re
+
+
+def validate_ssid(ssid):
+    """Check if SSID is valid"""
+    if not ssid or len(ssid.strip()) == 0:
+        return False, "SSID cannot be empty"
+    if len(ssid) > 32:
+        return False, "SSID too long"
+    if '"' in ssid or "'" in ssid:
+        return False, "Remove quotes from SSID"
+    return True, ""
+
+def validate_password(password):
+    """Check if password is valid"""
+    if len(password) < 8:
+        return False, "Password too short (need 8+ chars)"
+    if len(password) > 63:
+        return False, "Password too long"
+    return True, ""
+
+def check_confusing_characters(text, label):
+    """Check for commonly confused characters"""
+    warnings = []
     
-def add_new_wifi():
-    switch_to_jupyter()
-
-    ssid = input("Provide your wifi SSID (e.g. the name) then press enter: ")
-    pwd = input("Provide your wifi password then press enter: ")
-    command = ['sudo', 'sh', '-c', "wpa_passphrase %s %s >> /etc/wpa_supplicant/wpa_supplicant.conf"%(ssid, pwd)]
-
-    cmd1 = Popen(command, shell = False, stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-    #output = cmd1.stdout.read()
-    #print(output)
-    time.sleep(1)
-    #sudo_prompt = cmd1.communicate(sudo_password  + '\n')[1]
-    #print(sudo_prompt)
+    if 'O' in text and '0' in text:
+        warnings.append(f"⚠️  {label} has both O and 0 - double check which is which")
+    elif 'O' in text:
+        warnings.append(f"{label} has letter O - confirm it's not number 0")
+    elif '0' in text:
+        warnings.append(f"{label} has number 0 - confirm it's not letter O")
     
+    if any(char in text for char in ['I', '1', 'l']):
+        confusing_chars = [c for c in ['I', '1', 'l'] if c in text]
+        if len(confusing_chars) > 1:
+            warnings.append(f"⚠️  {label} has {'/'.join(confusing_chars)} - check: I=letter, 1=number, l=lowercase L")
+        elif 'I' in text:
+            warnings.append(f"{label} has capital I - confirm it's not number 1 or lowercase l")
+        elif '1' in text:
+            warnings.append(f"{label} has number 1 - confirm it's not letter I or l")
+        elif 'l' in text:
+            warnings.append(f"{label} has lowercase l - confirm it's not number 1 or capital I")
+    
+    if any(char in text for char in ['B', '8']):
+        if 'B' in text and '8' in text:
+            warnings.append(f"⚠️  {label} has both B and 8 - double check")
+        elif 'B' in text:
+            warnings.append(f"{label} has letter B - confirm it's not number 8")
+        elif '8' in text:
+            warnings.append(f"{label} has number 8 - confirm it's not letter B")
+    
+    if any(char in text for char in ['S', '5']):
+        if 'S' in text and '5' in text:
+            warnings.append(f"⚠️  {label} has both S and 5 - double check")
+    
+    # Check for spaces at start/end
+    if text != text.strip():
+        warnings.append(f"⚠️  {label} has extra spaces - removed automatically")
+    
+    return warnings
 
-def read_known_wifi():
-    command = ['cat', "/etc/wpa_supplicant/wpa_supplicant.conf"]
-    cmd2 = Popen(command, shell = False, universal_newlines=True, stdout=PIPE)
-    output = cmd2.stdout.read() 
-    output = re.split('network=', output)
-    for new_net in output[::-1]:
-        if "ssid" in new_net:
-            new_net = re.sub(r'[\{\}\t]', '', new_net).strip(' \n\t').split()
-            print("===========")
-            for detail in new_net:
-                if "ssid" in detail or "psk" in detail:
-                    print(detail)
+def get_network_info():
+    """Get network info with smart validation"""
+    print("🏠 HOME WIFI SETUP")
+    print("    Check your phone's WiFi settings now")
+    print()
+    
+    # Get SSID
+    while True:
+        ssid = input("📶 WiFi network name: ").strip()
+        
+        valid, error = validate_ssid(ssid)
+        if not valid:
+            print(f"❌ {error}")
+            continue
+        
+        # Check for confusing characters
+        warnings = check_confusing_characters(ssid, "Network name")
+        for warning in warnings:
+            print(warning)
+        
+        if warnings:
+            print(f"You entered: '{ssid}'")
+            confirm = input("Correct? (y/n): ").lower().strip()
+            if not confirm.startswith('y'):
+                print("Try again...\n")
+                continue
+        
+        break
+    
+    # Get password
+    while True:
+        password1 = input("🔐 WiFi password: ")
+        
+        valid, error = validate_password(password1)
+        if not valid:
+            print(f"❌ {error}")
+            continue
+        
+        # Check for confusing characters
+        warnings = check_confusing_characters(password1, "Password")
+        if warnings:
+            for warning in warnings:
+                print(warning)
+        
+        # Confirm password
+        password2 = input("🔐 Confirm password: ")
+        
+        if password1 != password2:
+            print("❌ Passwords don't match")
+            continue
+        
+        break
+    
+    return ssid, password1
+
+def add_home_wifi(ssid, password):
+    """Add WiFi network for home use"""
+    try:
+        cmd = [
+            'sudo', 'nmcli', 'connection', 'add', 
+            'type', 'wifi',
+            'con-name', f'{ssid}',
+            'ssid', ssid,
+            'wifi-sec.key-mgmt', 'wpa-psk',
+            'wifi-sec.psk', password,
+            'connection.autoconnect', 'yes'
+        ]
+        
+        print(f"🔧 DEBUG: Running command...")  # Debug info
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print(f"✅ Saved: {ssid}")
+        return True
+        
+    except subprocess.CalledProcessError as e:
+        print(f"❌ nmcli error: {e}")
+        print(f"❌ stderr: {e.stderr}")
+        print(f"❌ stdout: {e.stdout}")
+        return False
+    except FileNotFoundError:
+        print("❌ nmcli not found - NetworkManager not installed?")
+        return False
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+        return False
+
+def setup_home_wifi():
+    """Main setup function"""
+    print()
+    
+    networks_added = 0
+    
+    while networks_added < 2:  # Max 2 networks
+        try:
+            ssid, password = get_network_info()
+            
+            print(f"\nNetwork: '{ssid}'")
+            save = input("Save this? (y/n): ").lower().strip()
+            
+            if save.startswith('y'):
+                if add_home_wifi(ssid, password):
+                    networks_added += 1
+                    
+                    if networks_added == 1:
+                        backup = input("Add backup network? (y/n): ").lower().strip()
+                        if not backup.startswith('y'):
+                            break
+            else:
+                break
+                
+        except KeyboardInterrupt:
+            print("\n❌ Cancelled")
+            break
+    
+    if networks_added > 0:
+        print(f"\n🎉 {networks_added} new network(s) saved!")
+        print("At home: plug in robot, wait 3 minutes")
+        
+        # Show potential issues based on what they entered
+        print("\n🆘 If it doesn't work:")
+        print("• Wrong password (most common)")
+        print("• Wrong network name")
+        print("• Network requires login page")
+    else:
+        print("❌ No networks saved")
+
+def show_saved_networks():
+    """Show configured networks"""
+    try:
+        result = subprocess.run(['nmcli', '-f', 'NAME,TYPE', 'connection', 'show'], 
+                              capture_output=True, text=True, check=True)
+        
+        print("💾 Saved networks:")
+        wifi_count = 0
+        for line in result.stdout.split('\n')[1:]:
+            if 'wifi' in line.lower() and line.strip():
+                name = line.split()[0]
+                if name and name != '--':
+                    wifi_count += 1
+                    print("  ",wifi_count," ", name)
+        
+        if wifi_count == 0:
+            print("None")
+            
+    except subprocess.CalledProcessError:
+        print("❌ Can't list networks")

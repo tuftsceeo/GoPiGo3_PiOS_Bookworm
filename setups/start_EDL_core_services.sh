@@ -90,4 +90,5 @@ if ! grep -q "XDG_RUNTIME_DIR" /home/jupyter/.profile; then
     echo 'export XDG_RUNTIME_DIR="/run/user/1001"' >> /home/jupyter/.profile
 fi
 
-
+# Set up passwordless sudo for jupyter for the ip_feedback service
+echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/systemctl * ip_feedback*, /bin/systemctl * ip_feedback*" | sudo tee -a /etc/sudoers

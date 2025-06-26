@@ -1,10 +1,22 @@
+#!/bin/bash
+# This script sets up JupyterLab and related services on a GoPiGo3 PiOS Bookworm system.
+
+# It must be run as the jupyter user.
+if [[ $(id -un) != "jupyter" ]]; then
+    echo "Error: This script must be run as the jupyter user"
+    echo "Current user: $(id -un)"
+    exit 1
+fi
+
+echo "Running as jupyter user"
+
 # Set up JupyterLab configuration
-echo "ENTER SOME JUPYTER PASSWORDS PLEASE"
+echo "WAIT then enter some passwords when asked PLEASE"
 sleep 10
 cd /home/jupyter
 jupyter lab --generate-config 
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/EDL/jupyter_lab_config.py /home/jupyter/.jupyter/jupyter_lab_config.py
-echo "ENTER REGULAR EDL PASSWORD"
+echo "ENTER *_REGULAR_* EDL PASSWORD"
 jupyter lab password
 
 # Copy the Jupyter service file to systemd

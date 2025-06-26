@@ -68,4 +68,26 @@ sudo usermod -a -G lpadmin jupyter
 sudo chgrp -R users /home 
 sudo chmod -R g+rwx /home
 
+# Add jupyter user to audio and pulse-access groups
+# This is necessary for audio playback in JupyterLab
+usermod -a -G audio,pulse-access jupyter
+
+# Create the PulseAudio directory structure for jupyter user
+mkdir -p /run/user/1001
+chown jupyter:jupyter /run/user/1001
+chmod 700 /run/user/1001
+
+# Create PulseAudio directory
+sudo -u jupyter mkdir -p /run/user/1001/pulse
+
+# Add XDG_RUNTIME_DIR to jupyter user's bashrc if not already there
+if ! grep -q "XDG_RUNTIME_DIR" /home/jupyter/.bashrc; then
+    echo 'export XDG_RUNTIME_DIR="/run/user/1001"' >> /home/jupyter/.bashrc
+fi
+
+# Also add to jupyter user's profile for non-interactive shells
+if ! grep -q "XDG_RUNTIME_DIR" /home/jupyter/.profile; then
+    echo 'export XDG_RUNTIME_DIR="/run/user/1001"' >> /home/jupyter/.profile
+fi
+
 

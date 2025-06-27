@@ -20,6 +20,7 @@ sudo pip install Flask  --break-system-packages
 sudo pip install jupyterlab-tour --break-system-packages
 sudo pip install ipyevents --break-system-packages
 sudo pip install lckr_jupyterlab_variableinspector --break-system-packages
+# sudo pip install ipydrawio --break-system-packages #diagrams in jupyterlab, but it wants jupyterlab 3.8 not 4.0 installed from extension manager?
 sudo pip install requests --break-system-packages
 
 sudo pip install jupyterlab-language-pack-zh-CN --break-system-packages

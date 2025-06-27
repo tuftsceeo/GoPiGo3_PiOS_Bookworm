@@ -10,7 +10,7 @@ import threading
 #2023A
 
 # defines an asynchronous stream capture of images
-class AsyncCapture:
+class PiVideoStream:
     def __init__(self, resolution=(640, 480), rgb=False):
         self.picam2 = Picamera2()
         config = self.picam2.create_preview_configuration(main={"size": resolution, "format": "RGB888"})
@@ -36,7 +36,7 @@ class AsyncCapture:
             with self.lock:
                 self.frame = frame
 
-    def get_frame(self):
+    def read(self):
         with self.lock:
             if self.frame is not None:
                 # images returned are BRG by default for easier compatibility with opencv

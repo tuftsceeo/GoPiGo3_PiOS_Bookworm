@@ -9,6 +9,21 @@ sudo apt upgrade
 
 sudo apt install wayvnc novnc websockify
 
+# ==========
+# Install NodeJS 20 (for Jupyter Lab 4)
+# ==========
+# Remove existing nodejs
+sudo apt-get remove -y nodejs npm
+
+# Add NodeSource GPG key and repository  
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/nodesource.gpg
+echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x bookworm main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+
+# Update and install
+sudo apt-get update
+sudo apt-get install -y nodejs
+
+# ==========
 # Copy the WayVNC configuration file
 sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/EDL/wayvnc_config /etc/wayvnc/config
 
@@ -40,6 +55,7 @@ sudo apt install python3-setuptools
 sudo apt install python3-cffi
 sudo pip3 install jupyterlab --break-system-packages
 sudo pip3 install numpy pandas matplotlib seaborn scikit-learn --break-system-packages
+
 
 # Set up Jupyter AI
 sudo pip3 install faiss-cpu --break-system-packages
@@ -96,5 +112,6 @@ echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/systemctl * ip_feedback*, /bin/system
 # Set up passwordless sudo for jupyter for WiFi Network Management commands
 echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/nmcli *" | sudo tee -a /etc/sudoers
 
+# Set up wallpaper
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/TuftsWallpaper.png /usr/share/rpd-wallpaper/
 pcmanfm --set-wallpaper="/usr/share/rpd-wallpaper/TuftsWallpaper.png"

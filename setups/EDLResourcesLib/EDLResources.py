@@ -349,9 +349,9 @@ def setup_home_wifi():
 def show_saved_networks():
     """Show configured networks"""
     try:
-        result = subprocess.run(['nmcli', '-f', 'NAME,TYPE', 'connection', 'show'], 
-                              capture_output=True, text=True, check=True)
-        
+        result = subprocess.run(['nmcli', '-f', 'NAME,TYPE', 'connection', 'show'],
+                                capture_output=True, text=True, check=True)
+
         print("💾 Saved networks:")
         wifi_count = 0
         for line in result.stdout.split('\n')[1:]:

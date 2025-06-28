@@ -33,6 +33,8 @@ sudo pip install lckr_jupyterlab_variableinspector --break-system-packages
 sudo pip install ipympl --break-system-packages # JupyterLab Matplotlib support
 sudo pip install requests --break-system-packages
 
+
+
 # ================
 # Install JupyterLab languages
 # ================
@@ -53,5 +55,8 @@ sudo pip uninstall Jetson.GPIO --break-system-packages -y # Uninstall Jetson.GPI
 cd ~
 cd GoPiGo3_PiOS_Bookworm/setups/EDLResourcesLib
 sudo pip3 install -e . --break-system-packages
+
+echo "We may need to use: jupyter lab build --dev-build=False --minimize=False"
+echo "to build the JupyterLab extensions after installing them."
 
 # pip freeze > /home/pi/GoPiGo3_PiOS_Bookworm/py_packages.txt

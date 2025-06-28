@@ -9,8 +9,10 @@
 # - Must be user pi when running this script
 # - Do not need to configure i2c and spi - script will setup
 
+# Forked from: https://github.com/slowrunner/GoPiGo3_PiOS_Bookworm
+
 # USAGE:  
-#    wget https://raw.githubusercontent.com/slowrunner/GoPiGo3_PiOS_Bookworm/main/setups/install_GoPiGo3_PiOS_Bookworm.sh
+#    wget https://raw.githubusercontent.com/tuftsceeo/GoPiGo3_PiOS_Bookworm/main/setups/install_GoPiGo3_PiOS_Bookworm.sh
 #    source install_GoPiGo3_PiOS_Bookworm.sh
 
 
@@ -45,7 +47,6 @@ sudo mv setup.py setup.py.orig
 sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/i2c/di_i2c.py.bookworm di_i2c.py
 sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/RFR_Tools/setup.py .
 sudo pip3 install -e . --break-system-packages
-
 
 
 echo -e "install smbus-cffi python package"

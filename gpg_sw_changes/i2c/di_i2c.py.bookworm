@@ -103,6 +103,7 @@ class DI_I2C(object):
             self.bp3.set_sensor_type(self.port, self.bp3.SENSOR_TYPE.I2C, [0, 0])
             time.sleep(0.01)
         else:
+            print("Failed to start sensor with port: ", bus)
             raise IOError("I2C bus not supported")
 
         self.mutex = di_mutex.DI_Mutex(name = ("I2C_Bus_" + bus))

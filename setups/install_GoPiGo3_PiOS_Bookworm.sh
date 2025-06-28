@@ -44,7 +44,8 @@ sudo mv di_i2c.py di_i2c.py.orig
 sudo mv setup.py setup.py.orig
 sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/i2c/di_i2c.py.bookworm di_i2c.py
 sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/RFR_Tools/setup.py .
-sudo python3 setup.py install
+sudo pip3 install -e . --break-system-packages
+
 
 
 echo -e "install smbus-cffi python package"
@@ -56,7 +57,8 @@ sudo mv setup.py setup.py.orig
 sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/GPG_Soft_Python/setup.py .
 sudo mv gopigo3.py gopigo3.py.orig
 cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/GPG_Soft_Python/gopigo3.py.bookwormPi5 gopigo3.py
-sudo python3 setup.py install
+sudo pip3 install -e . --break-system-packages
+
 
 echo -e "setup di_sensors API"
 cd /home/pi/Dexter/DI_Sensors/Python/di_sensors
@@ -65,17 +67,18 @@ mv distance_sensor.py distance_sensor.py.orig
 cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/di_sensors/distance_sensor.py.bookworm distance_sensor.py
 cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/di_sensors/easy_distance_sensor.py.bookworm easy_distance_sensor.py
 cd /home/pi/Dexter/DI_Sensors/Python
-sudo python3 setup.py install
+sudo pip3 install -e . --break-system-packages
 
 
-echo -e "Eliminate software I2C from distance sensor"
-cd /home/pi/Dexter/GoPiGo3/Software/Python/Examples
-sudo mv easy_Distance_Sensor.py easy_Distance_Sensor.py.orig
-sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/Examples/easy_Distance_Sensor.py.bookworm easy_Distance_Sensor.py
+# NO LONGER NEED - SW I2C is now replaced with hardware I2C in di_i2c.py
+# echo -e "Eliminate software I2C from distance sensor"
+# cd /home/pi/Dexter/GoPiGo3/Software/Python/Examples
+# sudo mv easy_Distance_Sensor.py easy_Distance_Sensor.py.orig
+# sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/Examples/easy_Distance_Sensor.py.bookworm easy_Distance_Sensor.py
 
-echo -e "Copy extended C++ examples to /home/pi/Dexter/GoPiGo3/Software/cpp"
-sudo apt install -y cmake
-sudo cp -r ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/cpp /home/pi/Dexter/GoPiGo3/Software/
+# echo -e "Copy extended C++ examples to /home/pi/Dexter/GoPiGo3/Software/cpp"
+# sudo apt install -y cmake
+# sudo cp -r ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/cpp /home/pi/Dexter/GoPiGo3/Software/
 
 # install calibration panel on desktop
 if [[ -d /home/pi/Desktop ]]; then

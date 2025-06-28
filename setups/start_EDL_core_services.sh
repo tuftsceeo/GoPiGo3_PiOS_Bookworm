@@ -95,3 +95,6 @@ echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/systemctl * ip_feedback*, /bin/system
 
 # Set up passwordless sudo for jupyter for WiFi Network Management commands
 echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/nmcli *" | sudo tee -a /etc/sudoers
+
+sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/TuftsWallpaper.png /usr/share/rpd-wallpaper/
+pcmanfm --set-wallpaper="/usr/share/rpd-wallpaper/TuftsWallpaper.png"

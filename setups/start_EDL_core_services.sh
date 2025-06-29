@@ -7,7 +7,7 @@
 sudo apt update
 sudo apt upgrade 
 
-sudo apt install wayvnc novnc websockify
+
 
 # ==========
 # Install NodeJS 20 (for Jupyter Lab 4)
@@ -24,6 +24,8 @@ sudo apt-get update
 sudo apt-get install -y nodejs
 
 # ==========
+sudo apt install wayvnc novnc websockify # Somehow my novnc was uninstalled (by the prior commits) moving after NodeJS just in case
+
 # Copy the WayVNC configuration file
 sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/EDL/wayvnc_config /etc/wayvnc/config
 

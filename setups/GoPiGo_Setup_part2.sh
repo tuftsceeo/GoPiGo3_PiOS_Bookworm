@@ -7,8 +7,8 @@
 echo -e "Removing non-working RPi.GPIO supplied with Bookworm"
 sudo apt remove -y python3-rpi.gpio
 echo -e "Installing working RPi.GPIO for gpg3_power.service"
-#sudo pip3 install rpi-lgpio --break-system-packages # this is broken in Bookworm now
-sudo apt install -y python3-rpi.gpio
+sudo pip3 install rpi-lgpio --break-system-packages 
+#sudo apt install -y python3-rpi.gpio # Oops --- added the wrong one? this is broken in Bookworm now
 
 cd ~
 sudo cp /home/pi/Dexter/GoPiGo3/Install/gpg3_power.service /etc/systemd/system

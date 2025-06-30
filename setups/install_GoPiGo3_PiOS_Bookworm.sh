@@ -36,9 +36,10 @@ cp /home/pi/Dexter/GoPiGo3/Install/list_of_serial_numbers.pkl /home/pi/Dexter/.l
 echo -e "Setup non-root access rules"
 sudo cp /home/pi/GoPiGo3_PiOS_Bookworm/setups/99-com.rules /etc/udev/rules.d
 
-echo -e "Install requirements libffi-dev and python3-curtsies"
+echo -e "Install requirements libffi-dev and python3-curtsies and cmake"
 sudo apt install -y libffi-dev  
 sudo apt install -y --no-install-recommends python3-curtsies
+
 
 echo -e "setup RFR_TOOLS"
 cd /home/pi/Dexter/lib/Dexter//RFR_Tools/miscellaneous/
@@ -78,7 +79,7 @@ sudo pip3 install -e . --break-system-packages
 # sudo cp ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/Examples/easy_Distance_Sensor.py.bookworm easy_Distance_Sensor.py
 
 # echo -e "Copy extended C++ examples to /home/pi/Dexter/GoPiGo3/Software/cpp"
-# sudo apt install -y cmake
+sudo apt install -y cmake
 # sudo cp -r ~/GoPiGo3_PiOS_Bookworm/gpg_sw_changes/cpp /home/pi/Dexter/GoPiGo3/Software/
 
 # install calibration panel on desktop

@@ -88,12 +88,12 @@ sudo chmod -R g+rwx /home
 
 # Add jupyter user to audio and pulse-access groups
 # This is necessary for audio playback in JupyterLab
-usermod -a -G audio,pulse-access jupyter
+sudo usermod -a -G audio,pulse-access jupyter
 
 # Create the PulseAudio directory structure for jupyter user
-mkdir -p /run/user/1001
-chown jupyter:jupyter /run/user/1001
-chmod 700 /run/user/1001
+sudo mkdir -p /run/user/1001
+sudo chown jupyter:jupyter /run/user/1001
+sudo chmod 700 /run/user/1001
 
 # Create PulseAudio directory
 sudo -u jupyter mkdir -p /run/user/1001/pulse

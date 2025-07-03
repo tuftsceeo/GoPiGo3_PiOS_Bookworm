@@ -63,6 +63,9 @@ main() {
     
     cd "$REPO_DIR"
     
+    # Configure git to trust this directory when running as root
+    git config --global --add safe.directory "$REPO_DIR" 2>/dev/null
+    
     # Check for student modifications
     local modified_files=$(git diff-index --name-only HEAD --)
     

@@ -1,0 +1,18 @@
+[Unit]
+Description=Course Materials Update - Pull Latest Content  
+Documentation=Update course materials while preserving student work
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/course-update.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=120
+User=root
+Environment=HOME=/root
+
+[Install]
+WantedBy=multi-user.target

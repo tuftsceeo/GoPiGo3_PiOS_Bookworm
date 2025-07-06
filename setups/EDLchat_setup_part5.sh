@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # EDL Chat Setup Script for GoPiGo3
+
+# Run this last, after python packages
+
 # This script sets up the custom EDL Chat provider for Jupyter AI
 # Run from: /home/pi/GoPiGo3_PiOS_Bookworm/setups
 

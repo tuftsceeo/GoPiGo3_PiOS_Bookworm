@@ -66,14 +66,23 @@ main() {
     # Configure git to trust this directory when running as root
     git config --global --add safe.directory "$REPO_DIR" 2>/dev/null
     
+    # Create backup directory for timestamps and student work
+    rm -rf "$BACKUP_DIR"
+    mkdir -p "$BACKUP_DIR"
+    
+    # Store original file timestamps for ALL files before any operations
+    find . -type f -name "*.ipynb" -o -name "*.py" -o -name "*.md" | while read file; do
+        if [ -f "$file" ]; then
+            stat -c "%Y %n" "$file" >> "$BACKUP_DIR/timestamps"
+        fi
+    done 2>/dev/null
+    
     # Check for student modifications
     local modified_files=$(git diff-index --name-only HEAD --)
     
     # Backup student work if needed
     if [ -n "$modified_files" ]; then
         log_message "Backing up student work"
-        rm -rf "$BACKUP_DIR"
-        mkdir -p "$BACKUP_DIR"
         
         echo "$modified_files" | while read file; do
             if [ -f "$file" ]; then
@@ -83,8 +92,8 @@ main() {
         done
     fi
     
-    # Pull updates
-    if git pull >> "$LOG_FILE" 2>&1; then
+    # Pull updates from student_live branch
+    if git pull origin student_live >> "$LOG_FILE" 2>&1; then
         log_message "Git pull successful"
     else
         log_message "Git pull failed - check log"
@@ -97,7 +106,20 @@ main() {
                 cp "$BACKUP_DIR/$file" "$file"
             fi
         done
-        rm -rf "$BACKUP_DIR"
+    fi
+    
+    # Restore ALL original timestamps so script is invisible to students
+    if [ -f "$BACKUP_DIR/timestamps" ]; then
+        while read timestamp filepath; do
+            if [ -f "$filepath" ]; then
+                touch -d "@$timestamp" "$filepath" 2>/dev/null
+            fi
+        done < "$BACKUP_DIR/timestamps"
+    fi
+    
+    # Clean up backup directory
+    rm -rf "$BACKUP_DIR"
+    if [ -n "$modified_files" ]; then
         log_message "Restored student work"
     fi
     

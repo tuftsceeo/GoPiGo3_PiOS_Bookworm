@@ -1,5 +1,5 @@
 [Unit]
-Description=EDL Course Materials Update
+Description=Course Materials Update - Pull Latest Content While Preserving Student Work
 After=network-online.target
 Wants=network-online.target
 

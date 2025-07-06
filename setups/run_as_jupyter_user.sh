@@ -1,6 +1,8 @@
 #!/bin/bash
 # This script sets up JupyterLab and related services on a GoPiGo3 PiOS Bookworm system.
 
+# SETUP JUPYTER LAB -- AFTER THIS USE GIT TO
+
 # It must be run as the jupyter user.
 if [[ $(id -un) != "jupyter" ]]; then
     echo "Error: This script must be run as the jupyter user"
@@ -36,6 +38,12 @@ sudo chmod -R g+rwx /home
 
 echo "REMINDER - You need to clone in the EDL jupyter notebooks"
 cd /home/jupyter
-echo "git clone https://your-username:your-token@github.com/tuftsceeo/EDL.git"
-sleep 30
 echo "JUPYTER LAB READY"
+echo ""
+
+
+echo "  IMPORTANT - CLONE GIT HERE"
+echo "   ╔════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
+echo "   ║  git clone -b student_live https://your-username:your-token@github.com/tuftsceeo/EDL.git               ║"
+echo "   ╚════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
+echo ""

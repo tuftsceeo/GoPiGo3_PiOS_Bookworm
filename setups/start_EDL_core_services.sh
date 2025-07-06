@@ -1,4 +1,6 @@
 #!/bin/bash
+# THIS CREATES THE JUPYTER USER
+
 # Starts WayVNC, NoVNC, Websockify, JupyterLab, and Shell In A Box on a GoPiGo3 PiOS Bookworm system.
 # Copies EDL Web Homepage.
 # ==========

@@ -7,7 +7,7 @@
 
 # ==== EDL Set Ups ===
 sudo apt update
-sudo apt upgrade 
+sudo apt upgrade -y
 
 
 
@@ -26,7 +26,7 @@ sudo apt-get update
 sudo apt-get install -y nodejs
 
 # ==========
-sudo apt install wayvnc novnc websockify # Somehow my novnc was uninstalled (by the prior commits) moving after NodeJS just in case
+sudo apt install -y wayvnc novnc websockify # Somehow my novnc was uninstalled (by the prior commits) moving after NodeJS just in case
 
 # Copy the WayVNC configuration file
 sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/EDL/wayvnc_config /etc/wayvnc/config
@@ -42,9 +42,9 @@ sudo systemctl enable websockify.service
 sudo systemctl start websockify.service
 
 # Install web server packages
-sudo apt install  apache2 php
-sudo apt install raspberrypi-net-mods wpagui  
-sudo apt install avahi-autoipd bc 
+sudo apt install  -y apache2 php
+sudo apt install -y raspberrypi-net-mods wpagui  
+sudo apt install -y avahi-autoipd bc 
 sudo apt install -y mariadb-server mariadb-client
 
 # Copy EDL Webpage 

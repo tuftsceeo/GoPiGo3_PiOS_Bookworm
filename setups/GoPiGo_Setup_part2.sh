@@ -25,7 +25,7 @@ sudo systemctl start antenna_wifi.service
 
 # === ESPEAK-NG
 #sudo apt install -y espeak-ng
-sudo apt install espeak-ng espeak-ng-data libespeak-ng-dev 
+sudo apt install -y espeak-ng espeak-ng-data libespeak-ng-dev 
 # needed for py-espeak-ng 
 echo "Installing py-espeak-ng"
 sudo pip3 install py-espeak-ng --break-system-packages
@@ -100,14 +100,6 @@ fi
 sudo rm /home/pi/Dexter/gpg3_config.json 
 # remove old GPG config file in case there is one from prior image
 cd /home/pi/Dexter/GoPiGo3/Troubleshooting/
-
-echo "==============================="
-echo "GoPiGo3 Firmware and Hardware Test"
-echo "==============================="
-
-echo "GoPiGo3 Troubleshooting Script log" > log.txt
-sudo bash hardware_and_firmware_test.sh 2>&1| tee -a log.txt
-echo "==============================="
 
 
 echo -e "\n DONE --- READY TO REBOOT...."

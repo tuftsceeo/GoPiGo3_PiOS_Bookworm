@@ -1,9 +1,52 @@
+# At the very top of providers.py, before any other imports
+import jupyter_ai.extension
+
+# Store the original method
+_original_show_help = jupyter_ai.extension.AiExtension._show_help_message
+
+def _custom_show_help(self):
+    """Override the initial help message"""
+    # Get the default handler
+    default_handler = self.settings["jai_chat_handlers"].get("default")
+    if not default_handler:
+        return
+    
+    # Send custom welcome message
+    from jupyter_ai.models import AgentChatMessage
+    import time
+    import uuid
+    
+    custom_message = AgentChatMessage(
+        id=str(uuid.uuid4()),
+        time=time.time(),
+        body="""Welcome to EDL Chat!
+
+I'm here to help you program your GoPiGo3 robot. Just ask questions like:
+- "How do I make my robot move forward?"
+- "Show me obstacle avoidance code"
+- "Help me use the camera"
+
+Type your question below to get started!
+
+(EDL Chat Active)""",
+        reply_to="",
+        persona={"name": "Jupyternaut EDL", "avatar_route": "api/ai/static/jupyternaut.svg"} 
+         # Add required persona field
+    )
+    
+    default_handler.broadcast_message(custom_message)
+
+# Replace the method
+jupyter_ai.extension.AiExtension._show_help_message = _custom_show_help
+
 from jupyter_ai_magics import BaseProvider
 from jupyter_ai_magics.providers import EnvAuthStrategy, TextField
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 from jupyter_ai.chat_handlers.base import BaseChatHandler
 from jupyter_ai.chat_handlers.default import DefaultChatHandler
+from jupyter_ai.chat_handlers.help import HelpChatHandler
+
 
 # Keep your working SimpleChatProvider as-is
 class SimpleChatProvider(BaseProvider, ChatOpenAI):
@@ -95,7 +138,7 @@ class EDLChatProvider(BaseProvider, ChatOpenAI):
         """EDL Chat prompt template"""
         # NOTE: Don't include {history} - DefaultChatHandler manages this
         return ChatPromptTemplate.from_messages([
-            ("system", """You are an AI assistant specialized for EDL (Educational Data Lab) high school students using GoPiGo3 robots.
+            ("system", """You are an AI assistant specialized for EDL (Engineering Design Lab) precollege students using GoPiGo3 robots.
 
 Your primary role is to help students explore robotics and the engineering design process. Focus on:
 
@@ -199,6 +242,29 @@ class EDLChatHandler(DefaultChatHandler):
     
     async def process_message(self, message):
         """Process message with smart context detection"""
+        
+        # Intercept /help command
+        if message.body.strip() == '/help' or message.body.strip().startswith('/help '):
+            help_text = """Welcome to EDL Chat!
+
+I'm here to help you with GoPiGo3 robot programming. Just type your questions!
+
+Examples:
+- "How do I make my robot move forward?"
+- "Help me create obstacle avoidance"
+- "Show me distance sensor code"
+
+Useful commands:
+- /ask - Ask about robot functions
+- /clear - Clear chat
+
+Ready to code! Type your question below.
+
+(EDL Chat Active)"""
+            self.reply(help_text, message)
+            return  # Don't process further
+        
+        # Rest of your existing code...
         # Check if message contains EDL-related keywords
         message_lower = message.body.lower()
         needs_context = any(keyword in message_lower for keyword in self.EDL_KEYWORDS)
@@ -221,7 +287,7 @@ class EDLChatHandler(DefaultChatHandler):
         
         # Use parent's process_message
         await super().process_message(message)
-    
+            
     async def _get_edl_context(self, query: str) -> str:
         """Get relevant context from vector database"""
         try:
@@ -266,3 +332,40 @@ class EDLChatHandler(DefaultChatHandler):
         except Exception as e:
             print(f"DEBUG: Error getting EDL context: {e}")
             return ""
+            
+
+from jupyter_ai.chat_handlers.base import BaseChatHandler, SlashCommandRoutingType
+from jupyter_ai.models import HumanChatMessage
+
+# Add this to your existing providers.py file
+class EDLHelpHandler(BaseChatHandler):
+    """Custom help handler for EDL students"""
+    
+    id = "help"
+    name = "Help"
+    help = "Display help message"
+    routing_type = SlashCommandRoutingType(slash_id="help")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    async def process_message(self, message: HumanChatMessage):
+        """Process help command"""
+        help_text = """Welcome to EDL Chat!
+
+I'm here to help you with GoPiGo3 robot programming. Just type your questions!
+
+Examples:
+- "How do I make my robot move forward?"
+- "Help me create obstacle avoidance"  
+- "Show me distance sensor code"
+
+Useful commands:
+- /ask - Ask about robot functions
+- /clear - Clear chat
+
+Ready to code! Type your question below.
+
+(EDL Chat Active)"""
+        
+        self.reply(help_text, message)

@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "my-jupyter-ai-custom"
+version = "0.1.0"
+description = "Custom Jupyter AI providers including EDL Chat"
+requires-python = ">=3.8"
+dependencies = [
+    "jupyter-ai>=2.0.0",
+    "langchain-openai",
+]
+
+[project.entry-points."jupyter_ai.model_providers"]
+simple-custom-chat = "my_jupyter_ai_custom.providers:SimpleChatProvider"
+edl-chat = "my_jupyter_ai_custom.providers:EDLChatProvider"
+
+[project.entry-points."jupyter_ai.chat_handlers"]
+default = "my_jupyter_ai_custom.providers:EDLChatHandler"

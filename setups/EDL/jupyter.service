@@ -5,7 +5,20 @@ After=network.target
 [Service]
 User=jupyter  
 WorkingDirectory=/home/jupyter/ 
-ExecStart= /usr/local/bin/jupyter-lab
+ExecStart=/usr/local/bin/jupyter-lab \
+    --AiExtension.blocked_providers=simple_custom_chat \
+    --AiExtension.allowed_providers=openai-chat \
+    --AiExtension.allowed_providers=edl_custom_chat \
+    --AiExtension.blocked_providers=ai21 \
+    --AiExtension.blocked_providers=azure-chat-openai \
+    --AiExtension.blocked_providers=gpt4all \
+    --AiExtension.blocked_providers=huggingface_hub \
+    --AiExtension.allowed_providers=openai \
+    --AiExtension.blocked_providers=openai-chat-custom \
+    --AiExtension.blocked_providers=openrouter \
+    --AiExtension.blocked_providers=qianfan \
+    --AiExtension.blocked_providers=togetherai \
+    --AiExtension.default_max_chat_history=4
 Restart=on-failure
 
 [Install]

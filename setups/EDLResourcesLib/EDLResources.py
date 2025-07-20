@@ -11,7 +11,7 @@ from IPython.display import display
 
 
 #resources file for EDL jupyter notebooks
-#2023A
+#2023
 
 # defines an asynchronous stream capture of images
 class PiVideoStream:
@@ -127,7 +127,7 @@ class LiveGraphing:
         if self.running:
             return
             
-        print(f"Starting LiveGraphing thread (updates every {self.display_interval}s)...")
+        print(f"Starting LiveGraphing (updates every {self.display_interval}s)...")
         self.running = True
         self.thread = threading.Thread(target=self._display_loop, daemon=True)
         self.thread.start()
@@ -137,11 +137,11 @@ class LiveGraphing:
         if not self.running:
             return
             
-        print("Stopping LiveGraphing thread...")
+        #print("Stopping LiveGraphing thread...")
         self.running = False
         if self.thread and self.thread.is_alive():
             self.thread.join(timeout=2.0)
-        print("LiveGraphing stopped.")
+        #print("LiveGraphing stopped.")
         
     def add_data_point(self, signal, output=None, valid=True):
         """
@@ -173,7 +173,7 @@ class LiveGraphing:
         if output is not None and not self.has_output_data:
             self.has_output_data = True
             self.dual_mode = True
-            print(f"LiveGraphing: Detected output data - switching to dual plot mode")
+            #print(f"LiveGraphing: Detected output data - switching to dual plot mode")
         
         # Thread-safe data storage
         with self.lock:
@@ -198,7 +198,7 @@ class LiveGraphing:
                 time.sleep(self.display_interval)
                 
             except Exception as e:
-                print(f"LiveGraphing display error: {e}")
+                #print(f"LiveGraphing display error: {e}")
                 break
                 
     def _initialize_display(self):
@@ -230,7 +230,7 @@ class LiveGraphing:
         self._display_initialized = True
         
         mode = "dual plot" if self.dual_mode else "single plot"
-        print(f"LiveGraphing display initialized ({mode} mode).")
+        #print(f"LiveGraphing display initialized ({mode} mode).")
         
     def _update_display(self):
         """Update display in background thread."""
@@ -322,7 +322,7 @@ class LiveGraphing:
             
         self.display_count += 1
         mode_str = "dual" if dual_mode_copy else "single"
-        print(f"LiveGraphing update #{self.display_count} ({mode_str} mode, t={times_array[-1]:.1f}s)")
+        #print(f"LiveGraphing update #{self.display_count} ({mode_str} mode, t={times_array[-1]:.1f}s)")
         
     def get_performance_stats(self):
         """Get performance statistics."""

@@ -4,6 +4,10 @@ import os, sys
 import subprocess
 import time
 import threading
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import deque
+from IPython.display import display
 
 
 #resources file for EDL jupyter notebooks
@@ -49,6 +53,336 @@ class PiVideoStream:
         self.picam2.stop() 
         self.picam2.close()
 
+# LiveGraphing class for real-time data visualization.
+class LiveGraphing:
+    """
+    Live graphing class for real-time data visualization.
+    Follows PiVideoStream threading pattern for high performance.
+    
+    Auto-detects single plot (signal only) vs dual plot (signal + output) based on usage.
+    Perfect for control systems, sensor monitoring, or any real-time data visualization.
+    
+    Examples:
+        # Temperature monitoring (single plot)
+        temp_graph = LiveGraphing()
+        temp_graph.start()
+        temp_graph.add_data_point(temperature_celsius)
+        
+        # Control system (dual plot)
+        control_graph = LiveGraphing()
+        control_graph.start()
+        control_graph.add_data_point(error_value, control_response)
+        
+        # Light sensor with validity
+        light_graph = LiveGraphing()
+        light_graph.start()
+        light_graph.add_data_point(light_level, led_power, valid=sensor_working)
+    """
+    
+    def __init__(self, max_points=500, display_update_seconds=2.0,
+                    signal_label="Signal", output_label="Output", title="Live Data"):
+        """
+        Initialize LiveGraphing for real-time data visualization.
+        
+        Args:
+            max_points (int): Maximum data points to store
+            display_update_seconds (float): How often to update display
+            signal_label (str): Label for main signal/measurement
+            output_label (str): Label for output/response (if used)
+            title (str): Main title for the graph
+        """
+        self.max_points = max_points
+        self.display_interval = display_update_seconds
+        self.signal_label = signal_label
+        self.output_label = output_label
+        self.title = title
+        
+        # Thread-safe data storage
+        self.times = deque(maxlen=max_points)
+        self.signals = deque(maxlen=max_points)
+        self.outputs = deque(maxlen=max_points)
+        self.valid_flags = deque(maxlen=max_points)
+        self.lock = threading.Lock()
+        
+        # Auto-detection for plot type
+        self.has_output_data = False
+        self.dual_mode = False
+        
+        # Threading control
+        self.running = False
+        self.thread = None
+        self.start_time = None
+        
+        # Display objects
+        self.display_handle = None
+        self.figure = None
+        self._display_initialized = False
+        
+        # Performance tracking
+        self.add_data_times = []
+        self.display_count = 0
+        
+    def start(self):
+        """Start background display thread."""
+        if self.running:
+            return
+            
+        print(f"Starting LiveGraphing thread (updates every {self.display_interval}s)...")
+        self.running = True
+        self.thread = threading.Thread(target=self._display_loop, daemon=True)
+        self.thread.start()
+        
+    def stop(self):
+        """Stop background thread."""
+        if not self.running:
+            return
+            
+        print("Stopping LiveGraphing thread...")
+        self.running = False
+        if self.thread and self.thread.is_alive():
+            self.thread.join(timeout=2.0)
+        print("LiveGraphing stopped.")
+        
+    def add_data_point(self, signal, output=None, valid=True):
+        """
+        Add data point with auto-detection of single vs dual plot mode.
+        
+        Args:
+            signal: Main measurement/sensor value
+            output: Optional control response/output value
+            valid: Whether this data point is valid (default True)
+            
+        Examples:
+            # Single plot mode
+            graph.add_data_point(temperature)
+            graph.add_data_point(light_level, valid=sensor_ok)
+            
+            # Dual plot mode  
+            graph.add_data_point(error, control_signal)
+            graph.add_data_point(distance, motor_speed, valid=sensor_working)
+        """
+        start_time = time.perf_counter()
+        
+        current_time = time.time()
+        if self.start_time is None:
+            self.start_time = current_time
+        
+        relative_time = current_time - self.start_time
+        
+        # Auto-detect dual mode
+        if output is not None and not self.has_output_data:
+            self.has_output_data = True
+            self.dual_mode = True
+            print(f"LiveGraphing: Detected output data - switching to dual plot mode")
+        
+        # Thread-safe data storage
+        with self.lock:
+            self.times.append(relative_time)
+            self.signals.append(signal)
+            self.outputs.append(output if output is not None else 0)
+            self.valid_flags.append(valid)
+        
+        # Track performance
+        add_time = (time.perf_counter() - start_time) * 1000
+        self.add_data_times.append(add_time)
+        
+    def _display_loop(self):
+        """Background thread loop for display updates."""
+        while self.running:
+            try:
+                if not self._display_initialized:
+                    self._initialize_display()
+                    
+                self._update_display()
+                
+                time.sleep(self.display_interval)
+                
+            except Exception as e:
+                print(f"LiveGraphing display error: {e}")
+                break
+                
+    def _initialize_display(self):
+        """Initialize display once in background thread."""
+        plt.ioff()
+        
+        # Always create dual plot structure, hide second if not needed
+        self.figure, (self.ax1, self.ax2) = plt.subplots(2, 1, figsize=(7, 4))
+        self.figure.suptitle(f'{self.title} (Updates every {self.display_interval}s)', fontsize=11)
+        
+        # Setup signal plot
+        self.ax1.set_title(self.signal_label, fontsize=10)
+        self.ax1.set_ylabel('Value', fontsize=9)
+        self.ax1.grid(True, alpha=0.3)
+        
+        # Setup output plot (may be hidden)
+        self.ax2.set_title(self.output_label, fontsize=10)
+        self.ax2.set_xlabel('Time (seconds)', fontsize=9)
+        self.ax2.set_ylabel('Value', fontsize=9)
+        self.ax2.grid(True, alpha=0.3)
+        
+        # Initially hide second plot if no output data
+        if not self.dual_mode:
+            self.ax2.set_visible(False)
+        
+        plt.tight_layout()
+        
+        self.display_handle = display(self.figure, display_id=True)
+        self._display_initialized = True
+        
+        mode = "dual plot" if self.dual_mode else "single plot"
+        print(f"LiveGraphing display initialized ({mode} mode).")
+        
+    def _update_display(self):
+        """Update display in background thread."""
+        # Quickly copy data
+        with self.lock:
+            if not self.times:
+                return
+            times_copy = list(self.times)
+            signals_copy = list(self.signals)
+            outputs_copy = list(self.outputs)
+            valid_copy = list(self.valid_flags)
+            dual_mode_copy = self.dual_mode
+        
+        # Check if we need to switch to dual mode
+        if dual_mode_copy and not self.ax2.get_visible():
+            self.ax2.set_visible(True)
+            plt.tight_layout()
+        
+        # Clear and redraw
+        self.ax1.clear()
+        if dual_mode_copy:
+            self.ax2.clear()
+        
+        # Reconfigure signal plot
+        current_time = time.strftime("%H:%M:%S")
+        self.ax1.set_title(f'{self.signal_label} (Updated: {current_time})', fontsize=10)
+        self.ax1.set_ylabel('Value', fontsize=9)
+        self.ax1.grid(True, alpha=0.3)
+        
+        # Configure output plot if in dual mode
+        if dual_mode_copy:
+            self.ax2.set_title(f'{self.output_label} ({len(times_copy)} points)', fontsize=10)
+            self.ax2.set_xlabel('Time (seconds)', fontsize=9)
+            self.ax2.set_ylabel('Value', fontsize=9)
+            self.ax2.grid(True, alpha=0.3)
+        else:
+            # Single mode - put x-label on signal plot
+            self.ax1.set_xlabel('Time (seconds)', fontsize=9)
+        
+        # Plot data
+        times_array = np.array(times_copy)
+        signals_array = np.array(signals_copy)
+        outputs_array = np.array(outputs_copy)
+        valid_array = np.array(valid_copy)
+        
+        # Plot valid signal data
+        valid_mask = valid_array
+        valid_times = times_array[valid_mask]
+        valid_signals = signals_array[valid_mask]
+        
+        if len(valid_times) > 0:
+            self.ax1.plot(valid_times, valid_signals, 'b-', linewidth=2, alpha=0.8, label='Valid Data')
+            self.ax1.plot(valid_times[-1:], valid_signals[-1:], 'bo', markersize=6)
+        
+        # Plot invalid signal data
+        invalid_times = times_array[~valid_mask]
+        invalid_signals = signals_array[~valid_mask]
+        if len(invalid_times) > 0:
+            self.ax1.plot(invalid_times, invalid_signals, 'rx', markersize=6, alpha=0.8, label='Invalid Data')
+        
+        # Plot output data if in dual mode
+        if dual_mode_copy:
+            if len(valid_times) > 0:
+                valid_outputs = outputs_array[valid_mask]
+                self.ax2.plot(valid_times, valid_outputs, 'g-', linewidth=2, alpha=0.8, label='Output')
+                self.ax2.plot(valid_times[-1:], valid_outputs[-1:], 'go', markersize=6)
+            
+            if len(invalid_times) > 0:
+                invalid_outputs = outputs_array[~valid_mask]
+                self.ax2.plot(invalid_times, invalid_outputs, 'rx', markersize=6, alpha=0.8, label='Invalid')
+        
+        # Auto-scale
+        if len(times_array) > 1:
+            time_range = times_array[-1] - times_array[0]
+            padding = max(time_range * 0.05, 0.1)
+            
+            self.ax1.set_xlim(times_array[0] - padding, times_array[-1] + padding)
+            if dual_mode_copy:
+                self.ax2.set_xlim(times_array[0] - padding, times_array[-1] + padding)
+        
+        # Add legends
+        self.ax1.legend(fontsize=8)
+        if dual_mode_copy:
+            self.ax2.legend(fontsize=8)
+        
+        # Update display
+        if self.display_handle:
+            self.display_handle.update(self.figure)
+            
+        self.display_count += 1
+        mode_str = "dual" if dual_mode_copy else "single"
+        print(f"LiveGraphing update #{self.display_count} ({mode_str} mode, t={times_array[-1]:.1f}s)")
+        
+    def get_performance_stats(self):
+        """Get performance statistics."""
+        if not self.add_data_times:
+            return None
+            
+        return {
+            'total_data_points': len(self.add_data_times),
+            'avg_add_data_time_ms': np.mean(self.add_data_times),
+            'max_add_data_time_ms': np.max(self.add_data_times),
+            'display_updates': self.display_count,
+            'mode': 'dual' if self.dual_mode else 'single',
+        }
+        
+    def print_performance_report(self):
+        """Print performance analysis."""
+        stats = self.get_performance_stats()
+        if not stats:
+            print("No performance data available")
+            return
+            
+        print(f"\n=== LIVEGRAPHING PERFORMANCE REPORT ===")
+        print(f"Graph Mode: {stats['mode']} plot")
+        print(f"Data Collection Performance:")
+        print(f"  • Total data points: {stats['total_data_points']}")
+        print(f"  • Average add_data_point() time: {stats['avg_add_data_time_ms']:.3f}ms")
+        print(f"  • Maximum add_data_point() time: {stats['max_add_data_time_ms']:.3f}ms")
+        print(f"  • Performance rating: {'✓ EXCELLENT' if stats['avg_add_data_time_ms'] < 1 else '⚠ REVIEW'}")
+        print(f"Display Updates: {stats['display_updates']} (background thread)")
+
+
+# Convenience functions for common use cases
+def create_sensor_graph(sensor_name="Sensor", update_seconds=2.0):
+    """Create LiveGraphing for single sensor monitoring."""
+    return LiveGraphing(
+        display_update_seconds=update_seconds,
+        signal_label=f"{sensor_name} Reading",
+        title=f"{sensor_name} Monitor"
+    )
+
+def create_control_graph(system_name="Control System", update_seconds=2.0):
+    """Create LiveGraphing for control system visualization."""
+    return LiveGraphing(
+        display_update_seconds=update_seconds,
+        signal_label="Error Signal",
+        output_label="Control Output", 
+        title=f"{system_name} Performance"
+    )
+
+def create_robot_graph(update_seconds=3.0):
+    """Create LiveGraphing optimized for robot control loops."""
+    return LiveGraphing(
+        display_update_seconds=update_seconds,
+        signal_label="Measurement",
+        output_label="Response",
+        title="Robot Control System"
+    )
+
+
+
 #hides console output for some gopigo methods that like to be very verbose
 class HiddenPrints:
     def __enter__(self):
@@ -59,6 +393,7 @@ class HiddenPrints:
         sys.stdout.close()
         sys.stdout = self._original_stdout
 
+#speak function for the robot
 def speak(text, speed=170, voice="mb-us2", pitch=70, gap=40):
     
     """

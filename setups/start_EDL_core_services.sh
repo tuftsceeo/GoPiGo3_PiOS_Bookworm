@@ -88,17 +88,24 @@ sudo usermod -a -G lpadmin jupyter
 sudo chgrp -R users /home 
 sudo chmod -R g+rwx /home
 
-# Add jupyter user to audio and pulse-access groups
-# This is necessary for audio playback in JupyterLab
-sudo usermod -a -G audio,pulse-access jupyter
+# Add jupyter user to audio and pulse-access groups (PulseAudio compatibility)
+# Also add pipewire groups for native PipeWire support in Bookworm
+sudo usermod -a -G audio,pulse-access,pipewire,pipewire-pulse jupyter
 
-# Create the PulseAudio directory structure for jupyter user
+# Enable systemd lingering for jupyter user - keeps audio session persistent
+sudo loginctl enable-linger jupyter
+
+# Create the audio directory structure for jupyter user
 sudo mkdir -p /run/user/1001
 sudo chown jupyter:jupyter /run/user/1001
 sudo chmod 700 /run/user/1001
 
 # Create PulseAudio directory
 sudo -u jupyter mkdir -p /run/user/1001/pulse
+
+# Create systemd override for runtime directory persistence
+sudo mkdir -p /etc/systemd/system/user@1001.service.d
+sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/audio/user-runtime-dir.conf /etc/systemd/system/user@1001.service.d/runtime-dir.conf
 
 # Add XDG_RUNTIME_DIR to jupyter user's bashrc if not already there
 if ! grep -q "XDG_RUNTIME_DIR" /home/jupyter/.bashrc; then
@@ -109,6 +116,10 @@ fi
 if ! grep -q "XDG_RUNTIME_DIR" /home/jupyter/.profile; then
     echo 'export XDG_RUNTIME_DIR="/run/user/1001"' >> /home/jupyter/.profile
 fi
+
+# Create PipeWire config directory and copy audio configuration
+sudo -u jupyter mkdir -p /home/jupyter/.config/pipewire/pipewire-pulse.conf.d
+sudo cp ~/GoPiGo3_PiOS_Bookworm/setups/audio/10-no-auto-switch.conf /home/jupyter/.config/pipewire/pipewire-pulse.conf.d/
 
 # Set up passwordless sudo for jupyter for the ip_feedback service
 echo "jupyter ALL=(ALL) NOPASSWD: /usr/bin/systemctl * ip_feedback*, /bin/systemctl * ip_feedback*" | sudo tee -a /etc/sudoers

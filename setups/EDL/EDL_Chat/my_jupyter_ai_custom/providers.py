@@ -138,7 +138,6 @@ class EDLChatProvider(BaseProvider, ChatOpenAI):
         """EDL Chat prompt template"""
         # NOTE: Don't include {history} - DefaultChatHandler manages this
         return ChatPromptTemplate.from_messages([
-- Comment major algorithm steps, not every line
             ("system", """You are an AI assistant specialized in writing GoPiGo3 robot code for Jupyter notebooks for EDL (Engineering Design Lab) students.
 
 ## YOUR ROLE

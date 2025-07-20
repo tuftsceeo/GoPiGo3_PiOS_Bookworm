@@ -34,6 +34,10 @@ sudo pip3 install sparkfun-pi-servo-hat --break-system-packages
 # Plotting Libraries
 sudo pip3 install matplotlib  --break-system-packages
 sudo pip3 install seaborn --break-system-packages
+# Matplotlibrc file location for default colormap   
+sudo -u jupyter mkdir -p  "/home/jupyter/.config/matplotlib"
+sudo -u jupyter sh -c 'echo "image.cmap: gray" > /home/jupyter/.config/matplotlib/matplotlibrc'
+echo "Matplotlibrc file location for default colormap complete."
 
 # Google Cloud Libraries
 sudo pip3 install google-cloud-vision --break-system-packages
@@ -72,13 +76,18 @@ sudo pip install simplejpeg==1.8.2 --break-system-packages # Fixes the numpy 2 i
 sudo pip install adafruit-circuitpython-dotstar --break-system-packages # This wants the Jetson.GPIO package so not currently working
 sudo pip uninstall Jetson.GPIO --break-system-packages -y # Uninstall Jetson.GPIO as it causes issues on Pi
 
+
+
+# ================
 # Setup EDL Resources Library
+# ================
 cd ~
 cd GoPiGo3_PiOS_Bookworm/setups/EDLResourcesLib
 sudo pip3 install -e . --break-system-packages
 echo "EDL Resources Built & Installed."
 
 
+# ================
 echo "We may need to use: jupyter lab build --dev-build=False --minimize=False"
 echo "to build the JupyterLab extensions after installing them."
 

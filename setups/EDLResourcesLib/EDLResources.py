@@ -282,7 +282,7 @@ class LiveGraphing:
         valid_signals = signals_array[valid_mask]
         
         if len(valid_times) > 0:
-            self.ax1.plot(valid_times, valid_signals, 'b-', linewidth=2, alpha=0.8, label='Valid Data')
+            self.ax1.plot(valid_times, valid_signals, 'b.:', linewidth=2, alpha=0.8, label='Valid Data')
             self.ax1.plot(valid_times[-1:], valid_signals[-1:], 'bo', markersize=6)
         
         # Plot invalid signal data
@@ -295,7 +295,7 @@ class LiveGraphing:
         if dual_mode_copy:
             if len(valid_times) > 0:
                 valid_outputs = outputs_array[valid_mask]
-                self.ax2.plot(valid_times, valid_outputs, 'g-', linewidth=2, alpha=0.8, label='Output')
+                self.ax2.plot(valid_times, valid_outputs, 'g.:', linewidth=2, alpha=0.8, label='Output')
                 self.ax2.plot(valid_times[-1:], valid_outputs[-1:], 'go', markersize=6)
             
             if len(invalid_times) > 0:

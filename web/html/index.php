@@ -63,7 +63,7 @@
   </section>
   
    <section class="jupyter">
-    <a href="http://<?php echo $dexhost; ?>:8090/lab?reset" target="_blank">
+    <a href="http://<?php echo $dexhost; ?>:8090" target="_blank">
       <img src="img/Jupyter_logo.svg" onerror="this.src='img/Jupyter_logo.svg'; this.onerror=null;"style="width:170px;">
       <span class="button">Launch JupyterLab</span>
     </a>

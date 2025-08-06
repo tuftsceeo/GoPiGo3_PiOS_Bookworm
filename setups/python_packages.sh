@@ -77,6 +77,12 @@ sudo pip install adafruit-circuitpython-dotstar --break-system-packages # This w
 sudo pip uninstall Jetson.GPIO --break-system-packages -y # Uninstall Jetson.GPIO as it causes issues on Pi
 
 
+# ================
+# Restart and enable GPIO daemon service for piservoctl library
+# ================
+sudo systemctl enable pigpiod
+sudo systemctl start pigpiod
+
 
 # ================
 # Setup EDL Resources Library
